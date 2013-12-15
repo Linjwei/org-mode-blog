@@ -10,6 +10,8 @@ I had to learn how to use the Org html exporter properly and I started by readin
 
 *I use Org >= 8.0 with the new exporting system and don't know if this works with older versions too*
 
+The source code for this project [[https://github.com/steckerhalter/org-mode-blog][is available on Github.]]
+
 * Project setup
 
 The first thing you need is to define a project that the export function will use:
@@ -87,6 +89,6 @@ I would like to aggregate the posts and make a list with the title as a link, th
       ))
 #+END_SRC
 
-On an Org mode export the output is of the Elisp code is written directly into the buffer in Org syntax which is the used to create HTML.
+On an Org mode export the output of the Elisp code is written directly into the buffer in Org syntax which is then used to create html.
 
 * TODO Add a header and a footer

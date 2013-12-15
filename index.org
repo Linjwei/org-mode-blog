@@ -2,7 +2,7 @@
 
 I make notes and stuff here for your pleasure (or disgust). You can get in contact with me via [[https://twitter.com/steckerhalter][Twitter]] if you like. 
 
-The site is all cooked with [[http://orgmode.org/][Emacs Org mode]].. I'm an Emacs lover and have some goodies ready for you:
+The site is all cooked with [[http://orgmode.org/][Emacs Org mode]]. I'm an Emacs lover and have some goodies ready for you:
 
 - Steckemacs:  [[http://steckerhalter.co.vu/steckemacs.html][My Emacs configuration and documentation]]
 - grand-shell-theme: [[https://github.com/steckerhalter/grandshell-theme][My Emacs color theme]]
@@ -16,7 +16,8 @@ The site is all cooked with [[http://orgmode.org/][Emacs Org mode]].. I'm an Ema
     (dolist (file files)
        (setq plist (org-combine-plists (org-babel-with-temp-filebuffer file (org-export-get-environment))))
        (princ 
-        (format "* [[file:%s][%s]]\n\n%s\n\nDate: %s\n\n" 
+        (format "* %s [[file:%s][%s]]\n\n%s\n\nLast update: %s\n\n" 
+                (plist-get plist :status)
                 (concat dir "/" (file-name-nondirectory file))
                 (car (plist-get plist :title)) 
                 (plist-get plist :description) 
@@ -27,6 +28,22 @@ The site is all cooked with [[http://orgmode.org/][Emacs Org mode]].. I'm an Ema
 
 ---------------------------------------------------------------------------------------------------------
 
-* TODO Reflect status (done, in progress, todo) of the posts here
+* DONE Reflect status (done, in progress, todo) of the posts here
+
+I found that to make a property retrievable it has to be added to =org-export-options-alist=:
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-export-options-alist  '(:status "STATUS" nil nil t))
+#+END_SRC
+
+After that STATUS can be retrieved just as the other properties...
+
+#+BEGIN_SRC org
+#+STATUS: IN PROGRESS
+#+DESCRIPTION: bling ding ming
+#+KEYWORDS: test here
+#+END_SRC
+
+...with =org-export-get-environment=.
 
 * TODO Display the keywords on the frontpage?
