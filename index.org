@@ -7,6 +7,8 @@ The site is all cooked with [[http://orgmode.org/][Emacs Org mode]].. I'm an Ema
 - Steckemacs:  [[http://steckerhalter.co.vu/steckemacs.html][My Emacs configuration and documentation]]
 - grand-shell-theme: [[https://github.com/steckerhalter/grandshell-theme][My Emacs color theme]]
 
+---------------------------------------------------------------------------------------------------------
+
 #+BEGIN_SRC emacs-lisp :results output raw :exports results
   (let* ((dir "posts")
          (files (directory-files dir t "\\.org$" t)) 
@@ -22,6 +24,8 @@ The site is all cooked with [[http://orgmode.org/][Emacs Org mode]].. I'm an Ema
         )
       ))
 #+END_SRC
+
+---------------------------------------------------------------------------------------------------------
 
 * TODO Reflect status (done, in progress, todo) of the posts here
 
