@@ -62,7 +62,6 @@ dt { font-weight: bold; }
 .footpara { display: block; }
 .footdef  { margin-bottom: 1em; }
 .figure { padding: 1em; }
-.figure p { text-align: center; }
 .inlinetask {
     padding: 10px;
     border: 2px solid gray;

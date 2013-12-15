@@ -1,5 +1,12 @@
 #+TITLE: Steckerhalter's Dies und Das oder Was?
 
+I make notes and stuff here for your pleasure (or disgust). You can get in contact with me via [[https://twitter.com/steckerhalter][Twitter]] if you like. 
+
+The site is all cooked with [[http://orgmode.org/][Emacs Org mode]].. I'm an Emacs lover and have some goodies ready for you:
+
+- Steckemacs:  [[http://steckerhalter.co.vu/steckemacs.html][My Emacs configuration and documentation]]
+- grand-shell-theme: [[https://github.com/steckerhalter/grandshell-theme][My Emacs color theme]]
+
 #+BEGIN_SRC emacs-lisp :results output raw :exports results
   (let* ((dir "posts")
          (files (directory-files dir t "\\.org$" t)) 
