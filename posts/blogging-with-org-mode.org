@@ -1,0 +1,89 @@
+#+TITLE: Blogging with Org mode
+#+DATE: 2012-12-15
+#+STATUS: IN PROGRESS
+#+DESCRIPTION: How I use Emacs Org mode as a blogging tool (not done with that yet :)
+#+KEYWORDS: org-mode org emacs blogging
+
+I was fed up with all the blogging tools I had used so far. I really wanted to use Emacs and Org mode to blog so I looked at some of the options listed on the [[http://orgmode.org/worg/org-blog-wiki.html][Org mode homepage]] like =o-blog= or =blog-files=. For me this was much too complicated. I didn't want to use external tools nor get too fancy like =o-blog=. It should just be a plain Org mode export.
+
+I had to learn how to use the Org html exporter properly and I started by reading the [[http://orgmode.org/manual/Publishing.html][Org manual section on Publishing]].
+
+*I use Org >= 8.0 with the new exporting system and don't know if this works with older versions too*
+
+* Project setup
+
+The first thing you need is to define a project that the export function will use:
+
+#+BEGIN_SRC emacs-lisp :results silent
+  (setq org-publish-project-alist
+        `(("blog"
+           :components ("blog-content" "blog-static"))
+          ("blog-content"
+           :base-directory "~/blog/"
+           :base-extension "org"
+           :publishing-directory ,(getenv "PUBLISHING_DIRECTORY")
+           :recursive t
+           :publishing-function org-html-publish-to-html
+           :export-with-tags nil
+           :headline-levels 4
+           :auto-sitemap t
+           :sitemap-title "Sitemap"
+           :section-numbers nil
+           :with-toc nil
+           :with-author nil
+           :with-creator nil
+           :html-doctype "html5"
+           :html-preamble nil
+           :html-postamble nil
+           :html-head  "<link rel=\"stylesheet\" href=\"/css/style.css\" type=\"text/css\"/>\n"
+           :html-html5-fancy t)
+          ("blog-static"
+           :base-directory "~/blog/"
+           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf"
+           :publishing-directory ,(getenv "PUBLISHING_DIRECTORY")
+           :recursive t
+           :publishing-function org-publish-attachment)))
+
+#+END_SRC
+
+Evaluate that expression by pressing =C-c C-c= inside the block and use =org-publish-all= to export everything to html.
+
+The destination  is the =:publishing-directory= which is read from the environment variable =PUBLISHING-DIRECTORY=. It can be a local directory like =~/public_html= or a remote location like =/ssh:user@server:directory=.
+
+The source code is in the directory which looks something like this:
+
+#+BEGIN_SRC text
+blog
+├── css
+│   ├── bootstrap.css
+│   ├── darkstrap.css
+│   └── style.css
+├── index.org
+├── posts
+│   └── blogging-with-org-mode.org
+└── sitemap.org
+#+END_SRC
+
+The sitemap is auto-generated because above we used =:auto-sitemap t=.
+
+* Creating a posts index on the homepage
+
+I would like to aggregate the posts and make a list with the title as a link, the description and the last update. The information has to be parsed out of the posts. For this I use a code block in =index.org=:
+
+#+BEGIN_SRC emacs-lisp :results none :exports code
+  (let* ((dir "posts")
+         (files (directory-files dir t "\\.org$" t))
+         plist)
+    (dolist (file files)
+       (setq plist (org-combine-plists (org-babel-with-temp-filebuffer file (org-export-get-environment))))
+       (princ
+        (format "* [[file:%s][%s]]\n\n%s\n\nLast update: %s\n\n"
+                (concat dir "/" (file-name-nondirectory file))
+                (car (plist-get plist :title))
+                (plist-get plist :description)
+                (car (plist-get plist :date)))
+        )
+      ))
+#+END_SRC
+
+On an Org mode export the output is of the Elisp code is written directly into the buffer in Org syntax which is the used to create HTML.

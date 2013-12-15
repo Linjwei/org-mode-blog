@@ -1,0 +1,17 @@
+#+TITLE: Steckerhalter's Dies und Das oder Was?
+
+#+BEGIN_SRC emacs-lisp :results output raw :exports results
+  (let* ((dir "posts")
+         (files (directory-files dir t "\\.org$" t)) 
+         plist)
+    (dolist (file files)
+       (setq plist (org-combine-plists (org-babel-with-temp-filebuffer file (org-export-get-environment))))
+       (princ 
+        (format "* [[file:%s][%s]]\n\n%s\n\nDate: %s\n\n" 
+                (concat dir "/" (file-name-nondirectory file))
+                (car (plist-get plist :title)) 
+                (plist-get plist :description) 
+                (car (plist-get plist :date)))
+        )
+      ))
+#+END_SRC

@@ -1,0 +1,10 @@
+@import url("bootstrap.css");
+@import url("darkstrap.css");
+
+.twitter {
+    float: right !important;
+}
+
+.bloglinks {
+    font-size: x-large;
+}
