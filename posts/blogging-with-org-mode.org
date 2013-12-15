@@ -36,14 +36,15 @@ The first thing you need is to define a project that the export function will us
            :html-preamble nil
            :html-postamble nil
            :html-head  "<link rel=\"stylesheet\" href=\"/css/style.css\" type=\"text/css\"/>\n"
-           :html-html5-fancy t)
+           :html-html5-fancy t
+           :html-head-include-default-style nil
+           )
           ("blog-static"
            :base-directory "~/org-mode-blog/"
            :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf"
            :publishing-directory ,(getenv "PUBLISHING_DIRECTORY")
            :recursive t
            :publishing-function org-publish-attachment)))
-
 #+END_SRC
 
 Evaluate that expression by pressing =C-c C-c= inside the block and use =org-publish-all= to export everything to html.
