@@ -15,3 +15,7 @@
         )
       ))
 #+END_SRC
+
+* TODO Reflect status (done, in progress, todo) of the posts here
+
+* TODO Display the keywords on the frontpage?

@@ -88,3 +88,5 @@ I would like to aggregate the posts and make a list with the title as a link, th
 #+END_SRC
 
 On an Org mode export the output is of the Elisp code is written directly into the buffer in Org syntax which is the used to create HTML.
+
+* TODO Add a header and a footer
