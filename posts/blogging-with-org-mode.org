@@ -19,7 +19,7 @@ The first thing you need is to define a project that the export function will us
         `(("blog"
            :components ("blog-content" "blog-static"))
           ("blog-content"
-           :base-directory "~/blog/"
+           :base-directory "~/org-mode-blog/"
            :base-extension "org"
            :publishing-directory ,(getenv "PUBLISHING_DIRECTORY")
            :recursive t
@@ -38,7 +38,7 @@ The first thing you need is to define a project that the export function will us
            :html-head  "<link rel=\"stylesheet\" href=\"/css/style.css\" type=\"text/css\"/>\n"
            :html-html5-fancy t)
           ("blog-static"
-           :base-directory "~/blog/"
+           :base-directory "~/org-mode-blog/"
            :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf"
            :publishing-directory ,(getenv "PUBLISHING_DIRECTORY")
            :recursive t
