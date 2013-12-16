@@ -9,9 +9,10 @@
     font-size: x-large;
 }
 
-.todo   { font-family: monospace; color: red; }
-.done   { color: green; }
-.IN_PROGRESS { color: yellow; }
+.done, .todo { font-family: monospace;}
+.todo   { color: #f25a5a;}
+.done   { color: #dcf692; }
+.IN_PROGRESS { color: #f6df92; }
 .tag    { background-color: #eee; font-family: monospace;
           padding: 2px; font-size: 80%; font-weight: normal; }
 .timestamp { color: #bebebe; }
