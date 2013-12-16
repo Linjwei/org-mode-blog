@@ -51,7 +51,7 @@ The first thing you need is to define a project that the export function will us
 
 Evaluate that expression by pressing =C-c C-c= inside the block and use =org-publish-all= to export everything to html.
 
-The destination  is the =:publishing-directory= which is read from the environment variable =PUBLISHING-DIRECTORY=. It can be a local directory like =~/public_html= or a remote location like =/ssh:user@server:directory=.
+The destination  is the =:publishing-directory= which is read from the environment variable =PUBLISHING_DIRECTORY=. It can be a local directory like =~/public_html= or a remote location like =/ssh:user@server:directory=.
 
 The source code is in the directory which looks something like this:
 
@@ -71,7 +71,39 @@ The sitemap is auto-generated because above we used =:auto-sitemap t=.
 
 * Creating a posts index on the homepage
 
-I would like to aggregate the posts and make a list with the title as a link, the description and the last update. The information has to be parsed out of the posts. For this I use a code block in =index.org=:
+I would like to aggregate the posts and make a list with the title as a link, the description and the last update. The information has to be parsed out of the posts. 
+
+** Retrieve the status (DONE, IN PROGRESS, TODO)
+
+I found that to make a custom property retrievable it has to be added to =org-export-options-alist=:
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-export-options-alist  '(:status "STATUS" nil nil t))
+#+END_SRC
+
+After that =STATUS= can be retrieved just as the other properties...
+
+#+BEGIN_SRC org
+#+STATUS: IN PROGRESS
+#+DESCRIPTION: bling ding ming
+#+KEYWORDS: test here
+#+END_SRC
+
+...with =org-export-get-environment=:
+
+#+BEGIN_SRC emacs-lisp :results raw
+  (org-combine-plists (org-babel-with-temp-filebuffer (buffer-file-name) (org-export-get-environment)))
+#+END_SRC
+
+gives something like this:
+
+#+BEGIN_SRC emacs-lisp
+(:author nil :creator Emacs 24.3.50.1 (Org mode 8.2.4) :email user@example.com :exclude-tags (noexport) :headline-levels 3 :language en :preserve-breaks nil :section-numbers t :select-tags (export) :time-stamp-file t :with-archived-trees headline :with-author t :with-clocks nil :with-creator comment :with-date t :with-drawers (not LOGBOOK) :with-email nil :with-emphasize t :with-entities t :with-fixed-width t :with-footnotes t :with-inlinetasks t :with-latex t :with-planning nil :with-priority nil :with-smart-quotes nil :with-special-strings t :with-statistics-cookies t :with-sub-superscript t :with-toc t :with-tables t :with-tags t :with-tasks t :with-timestamps t :with-todo-keywords t :title (Blogging with Org mode) :date (2012-12-15) :status IN PROGRESS :description How I use Emacs Org mode as a blogging tool (not done with that yet :) :keywords org-mode org emacs blogging :back-end nil :translate-alist nil :footnote-definition-alist nil :id-alist nil)
+#+END_SRC
+
+** Generate the posts index
+
+A code block in =index.org= is used to parse all the files:
 
 #+BEGIN_SRC emacs-lisp :results none :exports code
   (let* ((dir "posts")
@@ -89,6 +121,6 @@ I would like to aggregate the posts and make a list with the title as a link, th
       ))
 #+END_SRC
 
-On an Org mode export the output of the Elisp code is written directly into the buffer in Org syntax which is then used to create html.
+On an Org mode export the output of the Elisp code is written directly into the buffer in Org syntax which is then used to create the html.
 
 * TODO Add a header and a footer
