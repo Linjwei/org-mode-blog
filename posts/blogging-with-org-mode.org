@@ -18,12 +18,12 @@ The first thing you need is to define a project that the export function will us
 
 #+BEGIN_SRC emacs-lisp :results silent
   (setq org-publish-project-alist
-        `(("blog"
+        '(("blog"
            :components ("blog-content" "blog-static"))
           ("blog-content"
            :base-directory "~/org-mode-blog/"
            :base-extension "org"
-           :publishing-directory ,(getenv "PUBLISHING_DIRECTORY")
+           :publishing-directory org-mode-blog-publishing-directory
            :recursive t
            :publishing-function org-html-publish-to-html
            :export-with-tags nil
@@ -36,22 +36,23 @@ The first thing you need is to define a project that the export function will us
            :with-creator nil
            :html-doctype "html5"
            :html-preamble nil
-           :html-postamble nil
+           :html-postamble "<div id='comments'></div>"
            :html-head  "<link rel=\"stylesheet\" href=\"/css/style.css\" type=\"text/css\"/>\n"
+           :html-head-extra "<script async src=\"/js/juvia.js\"></script>"
            :html-html5-fancy t
            :html-head-include-default-style nil
            )
           ("blog-static"
            :base-directory "~/org-mode-blog/"
            :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf"
-           :publishing-directory ,(getenv "PUBLISHING_DIRECTORY")
+           :publishing-directory org-mode-blog-publishing-directory
            :recursive t
            :publishing-function org-publish-attachment)))
 #+END_SRC
 
 Evaluate that expression by pressing =C-c C-c= inside the block and use =org-publish-all= to export everything to html.
 
-The destination  is the =:publishing-directory= which is read from the environment variable =PUBLISHING_DIRECTORY=. It can be a local directory like =~/public_html= or a remote location like =/ssh:user@server:directory=.
+The destination  is the =:publishing-directory= which is read from my variable =org-mode-blog-publishing-directory=. It can be a local directory like =~/public_html= or a remote location like =/ssh:user@server:directory=.
 
 The source code is in the directory which looks something like this:
 
@@ -71,13 +72,13 @@ The sitemap is auto-generated because above we used =:auto-sitemap t=.
 
 * Creating a posts index on the homepage
 
-I would like to aggregate the posts and make a list with the title as a link, the description and the last update. The information has to be parsed out of the posts. 
+I would like to aggregate the posts and make a list with the title as a link, the description and the last update. The information has to be parsed out of the posts.
 
 ** Retrieve the status (DONE, IN PROGRESS, TODO)
 
 I found that to make a custom property retrievable it has to be added to =org-export-options-alist=:
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :results silent
   (add-to-list 'org-export-options-alist  '(:status "STATUS" nil nil t))
 #+END_SRC
 
@@ -123,4 +124,28 @@ A code block in =index.org= is used to parse all the files:
 
 On an Org mode export the output of the Elisp code is written directly into the buffer in Org syntax which is then used to create the html.
 
-* TODO Add a header and a footer
+* Enabling comments
+
+Since the generated html is static we need to use a standalone comments solution. There are services like Discus but I really don't want ads and no control over my content. [[https://github.com/phusion/juvia][Juvia]] is perfect for that use case:
+
+#+BEGIN_QUOTE
+Juvia is an open source commenting system. It allows you to outsource your commenting needs to an external system so that you don't have to build your own commenting system for each website or each web app. Embedding a Juvia commenting page only involves pasting a JavaScript snippet into your web page.
+#+END_QUOTE
+
+I'm adding the necessary Javascript to =:html-head-extra=:
+
+#+BEGIN_SRC emacs-lisp
+  :html-head-extra "<script async src=\"/js/juvia.js\"></script>"
+#+END_SRC
+
+and =:html-postamble= contains the CSS element:
+
+#+BEGIN_SRC emacs-lisp
+  :html-postamble "<div id='comments'></div>"
+#+END_SRC
+
+That's all there is to do in the frontend.
+
+For the server side setup see my post [[file:discus-like-blog-comments-with-juvia.org][Discus-like blog comments with Juvia]].
+
+* TODO Adding a header and a footer
