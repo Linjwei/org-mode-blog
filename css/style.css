@@ -30,7 +30,7 @@ pre {
 }
 pre.src {
     position: relative;
-    overflow: visible;
+    white-space: pre-wrap;
     padding-top: 1.2em;
 }
 pre.src:before {
@@ -88,4 +88,8 @@ textarea { overflow-x: auto; }
 
 .juvia-preview-content {
     border: none !important;
+}
+
+.juvia-textarea-field textarea {
+    width: 99% !important;
 }

@@ -85,9 +85,11 @@ I found that to make a custom property retrievable it has to be added to =org-ex
 After that =STATUS= can be retrieved just as the other properties...
 
 #+BEGIN_SRC org
+#+TITLE: Blogging with Org mode
+#+DATE: 2012-12-15
 #+STATUS: IN PROGRESS
-#+DESCRIPTION: bling ding ming
-#+KEYWORDS: test here
+#+DESCRIPTION: How I use Emacs Org mode as a blogging tool (not done with that yet :)
+#+KEYWORDS: org-mode org emacs blogging
 #+END_SRC
 
 ...with =org-export-get-environment=:
