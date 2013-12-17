@@ -1,0 +1,56 @@
+#+TITLE: Emacs Helm Know How
+#+DATE: 2012-12-17
+#+STATUS: IN PROGRESS
+#+DESCRIPTION: Helm is a great incremental completion and selection narrowing framework. This post is meant to document some of the awesome features Helm provides...
+#+KEYWORDS: emacs helm narrowing completion files buffer switching
+
+* Helm commands
+
+=helm-mini= is a Helm command to switch buffers or open recent files. For me this is the most useful Helm command and I use it all the time instead of other buffer switchers like =iswitchb= or =ido-switch-buffer=. The source code:
+
+#+BEGIN_SRC emacs-lisp
+(defun helm-mini ()
+  "Preconfigured `helm' lightweight version \(buffer -> recentf\)."
+  (interactive)
+  (require 'helm-files)
+  (let ((helm-ff-transformer-show-only-basename nil))
+    (helm-other-buffer '(helm-source-buffers-list
+                         helm-source-recentf
+                         helm-source-buffer-not-found)
+                       "*helm mini*")))
+#+END_SRC
+
+We can see that it calls =helm-other-buffer= with 3 sources, first a list of open buffers, then the recent files and a source to create new files. It is possible to create custom commands with just the sources you might like.
+
+** TODO List of useful Helm commands
+
+| shortcut | command      | description                                                              |
+|----------+--------------+--------------------------------------------------------------------------|
+| C-x c a  | helm-apropos | Preconfigured helm to describe commands, functions, variables and faces. |
+
+* Helm sources
+
+Sources like =helm-source-recentf= configure what the source will contain:
+
+#+BEGIN_SRC emacs-lisp
+(defvar helm-source-recentf
+  `((name . "Recentf")
+    (init . (lambda ()
+              (require 'recentf)
+              (recentf-mode 1)))
+    (candidates . recentf-list)
+    (match . helm-files-match-only-basename)
+    (filtered-candidate-transformer . (lambda (candidates _source)
+                                        (cl-loop for i in candidates
+                                                 if helm-ff-transformer-show-only-basename
+                                                 collect (cons (helm-basename i) i)
+                                                 else collect i)))
+    (no-delay-on-input)
+    (keymap . ,helm-generic-files-map)
+    (help-message . helm-generic-file-help-message)
+    (mode-line . helm-generic-file-mode-line-string)
+    (action . ,(cdr (helm-get-actions-from-type
+                     helm-source-locate))))
+  "See (info \"(emacs)File Conveniences\").
+Set `recentf-max-saved-items' to a bigger value if default is too small.")
+#+END_SRC
