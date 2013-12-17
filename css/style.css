@@ -81,6 +81,7 @@ textarea { overflow-x: auto; }
 .org-info-js_search-highlight
 { background-color: #ffff00; color: #000000; font-weight: bold; }
 
-.juvia-preview-content {
+.juvia-preview-content,
+.juvia-comment > .juvia-metadata {
     background: #555 !important;
 }
