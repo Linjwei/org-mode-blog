@@ -85,3 +85,7 @@ textarea { overflow-x: auto; }
 .juvia-comment > .juvia-metadata {
     background: #555 !important;
 }
+
+.juvia-preview-content {
+    border: none !important;
+}
