@@ -128,7 +128,7 @@ On an Org mode export the output of the Elisp code is written directly into the 
 
 * Enabling comments
 
-Since the generated html is static we need to use a standalone comments solution. There are services like Discus but I really don't want ads and no control over my content. [[https://github.com/phusion/juvia][Juvia]] is perfect for that use case:
+Since the generated html is static we need to use a standalone comments solution. There are services like Disqus but I really don't want ads and no control over my content. [[https://github.com/phusion/juvia][Juvia]] is perfect for that use case:
 
 #+BEGIN_QUOTE
 Juvia is an open source commenting system. It allows you to outsource your commenting needs to an external system so that you don't have to build your own commenting system for each website or each web app. Embedding a Juvia commenting page only involves pasting a JavaScript snippet into your web page.
@@ -148,6 +148,6 @@ and =:html-postamble= contains the CSS element:
 
 That's all there is to do in the frontend.
 
-For the server side setup see my post [[file:discus-like-blog-comments-with-juvia.org][Discus-like blog comments with Juvia]].
+For the server side setup see my post [[file:disqus-like-blog-comments-with-juvia.org][Disqus-like blog comments with Juvia]].
 
 * TODO Adding a header and a footer
