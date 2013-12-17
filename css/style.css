@@ -30,7 +30,8 @@ pre {
 }
 pre.src {
     position: relative;
-    white-space: pre-wrap;
+    overflow: visible;
+   white-space: pre-wrap;
     padding-top: 1.2em;
 }
 pre.src:before {
