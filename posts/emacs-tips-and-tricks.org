@@ -1,0 +1,13 @@
+#+TITLE: Emacs Tips and Tricks
+#+DATE: 2012-12-18
+#+STATUS: IN PROGRESS
+#+DESCRIPTION: I'm gathering all the cool tricks that I find out about Emacs in this post (mostly for myself because I keep forgetting them again :)...
+#+KEYWORDS: emacs tips tricks
+
+* Character Manipulation
+
+** Deleting Whitespace
+
+=M-\= or =(delete-horizontal-space)= will delete all spaces and tabs around point.
+
+=M-SPC\= =(just-one-space)= will delete all spaces and tabs around point, leaving one space.
