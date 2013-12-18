@@ -53,7 +53,6 @@ pre.src-java:before  { content: 'Java'; }
 pre.src-sql:before   { content: 'SQL'; }
 
 table { border-collapse:collapse; }
-td, th { vertical-align:top;  }
 th.right  { text-align: center;  }
 th.left   { text-align: center;   }
 th.center { text-align: center; }
@@ -93,4 +92,8 @@ textarea { overflow-x: auto; }
 
 .juvia-textarea-field textarea {
     width: 99% !important;
+}
+
+#content {
+    padding-bottom: 30px;
 }

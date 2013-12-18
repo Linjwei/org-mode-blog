@@ -4,10 +4,31 @@
 #+DESCRIPTION: I'm gathering all the cool tricks that I find out about Emacs in this post (mostly for myself because I keep forgetting them again :)...
 #+KEYWORDS: emacs tips tricks
 
-* Character Manipulation
+For now I'll go through the manual and write down command/shortcuts I might not know so well or not at all but would like to learn or use more often:
 
-** Deleting Whitespace
+* Deleting Whitespace
 
-=M-\= or =(delete-horizontal-space)= will delete all spaces and tabs around point.
+| =M-\=     | Delete spaces and tabs around point                                                                                                                             | =delete-horizontal-space= |
+| =M-<SPC>= | Delete spaces and tabs around point, leaving one space                                                                                                          | =just-one-space=          |
+| =C-x C-o= | Delete blank lines around the current line                                                                                                                      | =delete-blank-lines=      |
+| =M-^=     | Join two lines by deleting the intervening newline, along with any indentation following it. With a prefix (=C-u M-^=) it joins the current with the next line. | =delete-indentation=      |
 
-=M-SPC\= or =(just-one-space)= will delete all spaces and tabs around point, leaving one space.
+* Marking
+
+| =M-@=   | Set mark after end of next word.  This does not move point.                    | =mark-word=         |
+| =C-M-@= | Set mark after end of following balanced expression. This does not move point. | =mark-sexp=         |
+| =M-h=   | Move point to the beginning of the current paragraph, and set mark at the end. | =mark-paragraph=    |
+| =C-M-h= | Move point to the beginning of the current defun, and set mark at the end.     | =mark-defun=        |
+| =C-x h= | Move point to the beginning of the buffer, and set mark at the end.            | =mark-whole-buffer= |
+
+* Killing
+
+| =C-S-backspace= | Kill an entire line at once.                    | =kill-whole-line=        |
+| =M-<DEL>=       | (Also =<C-backspace>=) Kill one word backwards. | =backward-kill-word=     |
+| =C-x <DEL>=     | Kill back to beginning of sentence.             | =backward-kill-sentence= |
+| =C-M-k=         | Kill the following balanced expression.         | =kill-sexp=              |
+| =M-z CHAR=      | Kill through the next occurrence of CHAR.       | =zap-to-char=            |
+
+* Yanking
+
+| =C-u C-y= | Yanks like =C-y= but leaves the cursor in front of the inserted text, and sets the mark at the end. | =yank= |

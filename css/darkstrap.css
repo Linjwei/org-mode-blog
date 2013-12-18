@@ -88,14 +88,15 @@ textarea::-webkit-input-placeholder {
   color: #ececec;
 }
 
-.table th,
-.table td {
+th,
+td {
   border-top: 1px solid #666666;
+  padding: 4px;  
 }
-.table tbody + tbody {
+tbody {
   border-top: 2px solid #666666;
 }
-.table .table {
+table {
   background-color: #2f2f2f;
 }
 
@@ -111,8 +112,8 @@ textarea::-webkit-input-placeholder {
   background-color: #444444;
 }
 
-.table-hover tbody tr:hover td,
-.table-hover tbody tr:hover th {
+tbody tr:hover td,
+tbody tr:hover th {
   background-color: #666666;
 }
 
