@@ -10,4 +10,4 @@
 
 =M-\= or =(delete-horizontal-space)= will delete all spaces and tabs around point.
 
-=M-SPC\= =(just-one-space)= will delete all spaces and tabs around point, leaving one space.
+=M-SPC\= or =(just-one-space)= will delete all spaces and tabs around point, leaving one space.
