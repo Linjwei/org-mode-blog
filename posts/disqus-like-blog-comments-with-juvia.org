@@ -1,11 +1,110 @@
 #+TITLE: Disqus-like blog comments with Juvia
-#+DATE: 2012-12-17
-#+STATUS: TODO
+#+DATE: 2012-12-20
+#+STATUS: DONE
 #+DESCRIPTION: Disqus is easy to use but you give up the control and it has ads. An alternative is Juvia which is a Ruby comments server that can be installed on a self-hosted server...
 #+KEYWORDS: blog comments disqus self-hosted
 
-* TODO Introduction
+* Introduction
 
-* TODO Server setup
+https://github.com/phusion/juvia/raw/master/app/assets/images/logo-128.png
 
-* TODO Integration on the website
+#+BEGIN_QUOTE
+Juvia is an open source commenting system. It allows you to outsource your commenting needs to an external system so that you don't have to build your own commenting system for each website or each web app. Embedding a Juvia commenting page only involves pasting a JavaScript snippet into your web page.
+#+END_QUOTE
+
+Juvia Homepage (on Github): https://github.com/phusion/juvia
+
+For this setup I'm going to use Debian Wheezy as OS and Mysql/Apache so you might need to install them first. You also need Ruby (mine is v1.9) and Bundler.
+
+* Server setup
+
+First create a user account that will be used for Juvia:
+
+#+BEGIN_SRC shell-script
+sudo adduser blog
+#+END_SRC
+
+Keep the defaults there...
+
+Since I'm using Mysql we need the mysql dev package so that Bundle can install the Mysql Gem:
+
+#+BEGIN_SRC shell-script
+sudo aptitude install libmysqlclient-dev
+#+END_SRC
+
+Create a Mysql database and user account for Juvia:
+
+#+BEGIN_SRC sql
+create database juvia;
+GRANT ALL PRIVILEGES ON juvia.* To 'juvia'@'localhost' IDENTIFIED BY 'password';
+#+END_SRC
+
+Then change to the new user and get the source code:
+
+#+BEGIN_SRC shell-script
+  sudo su - blog
+  git clone https://github.com/phusion/juvia.git
+  cd juvia
+#+END_SRC
+
+Configure the application in =config/application.yml= (change only production):
+
+#+BEGIN_SRC conf
+production:
+  base_url: http://juvia.mysite.com
+  from: comments@myemail.com
+  email_method: sendmail
+#+END_SRC
+
+And setup the database in =config/database.yml= (change only production):
+
+#+BEGIN_SRC conf
+production:
+  adapter: mysql2
+  database: juvia
+  host: localhost
+  username: juvia
+  password: password
+#+END_SRC
+
+Then execute the bundler install:
+
+#+BEGIN_SRC shell-script
+  bundle install --without='development test postgres sqlite' --path=help
+  bundle exec rake db:schema:load RAILS_ENV=production
+  bundle exec rake assets:precompile RAILS_ENV=production RAILS_GROUPS=assets
+#+END_SRC
+
+At this point you should be able to fire up the rails server:
+
+#+BEGIN_SRC shell-script
+  RAILS_ENV=production bundle exec rails server -p 3333
+#+END_SRC
+
+I'm using port 3333 here because 3000 (the default) is already occupied on my server. If that works you can hit Ctrl-C and start it in the background:
+
+#+BEGIN_SRC shell-script
+  RAILS_ENV=production nohup bundle exec rails server -p 3333 &
+#+END_SRC
+
+Next we have to proxy the traffic from Apache to the rails server. For this I created a Virtual Host =/etc/apache2/sites-available/juvia.mysite.com=:
+
+#+BEGIN_SRC conf
+  <VirtualHost 8.8.8.8:80>
+      ServerAdmin info@mysite.com
+      ServerName juvia.mysite.com
+  
+      ProxyPass / http://localhost:3333/
+      ProxyPassReverse / http://localhost:3333/
+  
+      ProxyRequests Off
+      <Proxy *>
+      Order deny,allow
+      Allow from all
+      </Proxy>
+  </VirtualHost>
+#+END_SRC
+
+Enable the site with =sudo a2ensite juvia.mysite.com= and reload Apache: =sudo service apache2 reload=.
+
+Now open the url to the site in the browser, setup the admin account and follow the instructions of the webinterface to add the necessary Javascript code to your frontend.
