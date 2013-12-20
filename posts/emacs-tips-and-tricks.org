@@ -35,8 +35,7 @@ For commands with multiple sources like =helm-apropos=, press =C-o= to get the n
 For example =helm-apropos= has three Actions for =Commands=:
 
 - Describe Function: Display the full documentation of FUNCTION (a symbol).
-- Find Function: Finds the source file containing the definition of the function
-near point
+- Find Function: Finds the source file containing the definition of the function near point
 - Info Lookup: Find the command in the Info manual
 
 * Deleting whitespace
