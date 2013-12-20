@@ -23,15 +23,9 @@
 .underline { text-decoration: underline; }
 #postamble p, #preamble p { font-size: 90%; margin: .2em; }
 p.verse { margin-left: 3%; }
-pre {
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-}
 pre.src {
     position: relative;
     overflow: visible;
-   white-space: pre-wrap;
     padding-top: 1.2em;
 }
 pre.src:before {
@@ -53,12 +47,6 @@ pre.src-java:before  { content: 'Java'; }
 pre.src-sql:before   { content: 'SQL'; }
 
 table { border-collapse:collapse; }
-th.right  { text-align: center;  }
-th.left   { text-align: center;   }
-th.center { text-align: center; }
-td.right  { text-align: right;  }
-td.left   { text-align: left;   }
-td.center { text-align: center; }
 dt { font-weight: bold; }
 .footpara:nth-child(2) { display: inline; }
 .footpara { display: block; }
@@ -92,8 +80,4 @@ textarea { overflow-x: auto; }
 
 .juvia-textarea-field textarea {
     width: 99% !important;
-}
-
-#content {
-    padding-bottom: 30px;
 }

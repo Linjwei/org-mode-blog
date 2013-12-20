@@ -24,15 +24,10 @@ The site is all cooked with [[http://orgmode.org/][Emacs Org mode]]. I'm an Emac
     (setq entries (nreverse entries))
     (dolist (entry entries)
       (princ 
-       (format "* %s [[file:%s][%s]]\n\n%s\n\nLast update: %s\n\n" 
-               (plist-get entry :status)
+       (format "* [[file:%s][%s]]\n\n%s\n\nLast update: %s\n\n" 
                (plist-get entry :path)
                (car (plist-get entry :title)) 
                (plist-get entry :description)
                (plist-get entry :git-date)))
       ))
 #+END_SRC
-
----------------------------------------------------------------------------------------------------------
-
-* TODO Display the keywords on the frontpage?
