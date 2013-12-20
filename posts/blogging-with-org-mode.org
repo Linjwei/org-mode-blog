@@ -1,5 +1,4 @@
 #+TITLE: Blogging with Org mode
-#+DATE: 2012-12-15
 #+STATUS: IN PROGRESS
 #+DESCRIPTION: How I use Emacs Org mode as a blogging tool (not done with that yet :)
 #+KEYWORDS: org-mode org emacs blogging
@@ -108,21 +107,31 @@ gives something like this:
 
 A code block in =index.org= is used to parse all the files:
 
-#+BEGIN_SRC emacs-lisp :results none :exports code
+#+BEGIN_SRC emacs-lisp :results output raw :exports code
   (let* ((dir "posts")
-         (files (directory-files dir t "\\.org$" t))
-         plist)
-    (dolist (file files)
-       (setq plist (org-combine-plists (org-babel-with-temp-filebuffer file (org-export-get-environment))))
-       (princ
-        (format "* [[file:%s][%s]]\n\n%s\n\nLast update: %s\n\n"
-                (concat dir "/" (file-name-nondirectory file))
-                (car (plist-get plist :title))
-                (plist-get plist :description)
-                (car (plist-get plist :date)))
-        )
-      ))
+         (files (directory-files dir t "^[^\\.][^#].*\\.org$" t))
+         entries)
+      (dolist (file files)
+        (let* ((path (concat dir "/" (file-name-nondirectory file)))
+               (git-date (format-time-string "%Y-%m-%d" (date-to-time (magit-git-string "log" "-1" "--format=%ci" file))))
+               (env (org-combine-plists (org-babel-with-temp-filebuffer file (org-export-get-environment)))))
+          (plist-put env :path path)
+          (plist-put env :git-date git-date)
+          (push env entries)))
+      (sort entries (lambda (a b) (string< (plist-get a :git-date) (plist-get b :git-date))))
+      (setq entries (nreverse entries))
+      (dolist (entry entries)
+        (princ 
+         (format "* %s [[file:%s][%s]]\n\n%s\n\nLast update: %s\n\n" 
+                 (plist-get entry :status)
+                 (plist-get entry :path)
+                 (car (plist-get entry :title)) 
+                 (plist-get entry :description)
+                 (plist-get entry :git-date)))
+        )) 
 #+END_SRC
+
+After having retrieved the environment I add the filename to each entry and assemble the in =entries=. Then I sort the entries based on the date parsed for each file from Git. And the last =dolist= formats the data for Org output.
 
 On an Org mode export the output of the Elisp code is written directly into the buffer in Org syntax which is then used to create the html.
 

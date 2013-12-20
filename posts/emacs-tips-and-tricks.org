@@ -4,9 +4,42 @@
 #+DESCRIPTION: I'm gathering all the cool tricks that I find out about Emacs in this post (mostly for myself because I keep forgetting them again :)...
 #+KEYWORDS: emacs tips tricks
 
-For now I'll go through the manual and write down command/shortcuts I might not know so well or not at all but would like to learn or use more often:
+* Useful external resources
 
-* Deleting Whitespace
+** Elisp Cookbook
+
+[[http://www.emacswiki.org/emacs/ElispCookbook][A page on the EmacsWiki]] with information on how to do many common tasks with Elisp:
+
+#+BEGIN_QUOTE
+This page contains snippets of code that demonstrate basic EmacsLisp programming operations in the spirit of the O’Reilly cookbook series of books. For every task addressed, a worked-out solution is presented as a short, focused, directly usable piece of code.
+
+All this stuff can be found elsewhere, but it is scattered about in libraries, manuals, etc. It would be helpful to have here in one spot.
+#+END_QUOTE
+
+* Finding stuff
+
+[[https://github.com/emacs-helm/helm][Emacs Helm]] is the most useful helper to query all kinds of resources for something that you might want to look up. For in-depth Helm information see my post [[file:emacs-helm-know-how.org][Emacs Helm Know How]].
+
+I'm going to list my custom bindings to the appropriate Helm commands here.
+
+| my shortcut | shortcut    | command             | description                                                           |
+|-------------+-------------+---------------------+-----------------------------------------------------------------------|
+| C-h ,       | =C-x c a=   | helm-apropos        | Describe commands, functions, variables and faces                     |
+| =C-h .=     | =C-x c h r= | helm-info-emacs     | Emacs info manual: find out how to do something with Emacs            |
+| =C-h 4=     |             | helm-info-elisp     | Elisp info manual: great to lookup information when programming Elisp |
+| =C-h 3=     |             | helm-locate-library | Quick way of getting to the elisp source of a library                 |
+| =C-h C-l=   |             | helm-locate         | Great way of using UNIX =locate= command to find files anywhere       |
+
+For commands with multiple sources like =helm-apropos=, press =C-o= to get the next source. Often Helm binds multiple Actions to a command. Press =TAB= to choose an action. =RET= on an entry uses the first action.
+
+For example =helm-apropos= has three Actions for =Commands=:
+
+- Describe Function: Display the full documentation of FUNCTION (a symbol).
+- Find Function: Finds the source file containing the definition of the function
+near point
+- Info Lookup: Find the command in the Info manual
+
+* Deleting whitespace
 
 | =M-\=     | Delete spaces and tabs around point                                                                                                                             | =delete-horizontal-space= |
 | =M-<SPC>= | Delete spaces and tabs around point, leaving one space                                                                                                          | =just-one-space=          |

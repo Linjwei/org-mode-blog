@@ -1,5 +1,4 @@
 #+TITLE: Emacs Helm Know How
-#+DATE: 2012-12-17
 #+STATUS: IN PROGRESS
 #+DESCRIPTION: Helm is a great incremental completion and selection narrowing framework. This post is meant to document some of the awesome features Helm provides...
 #+KEYWORDS: emacs helm narrowing completion files buffer switching
@@ -21,12 +20,6 @@
 #+END_SRC
 
 We can see that it calls =helm-other-buffer= with 3 sources, first a list of open buffers, then the recent files and a source to create new files. It is possible to create custom commands with just the sources you might like.
-
-** TODO List of useful Helm commands
-
-| shortcut | command      | description                                                              |
-|----------+--------------+--------------------------------------------------------------------------|
-| C-x c a  | helm-apropos | Preconfigured helm to describe commands, functions, variables and faces. |
 
 * Helm sources
 

@@ -11,18 +11,25 @@ The site is all cooked with [[http://orgmode.org/][Emacs Org mode]]. I'm an Emac
 
 #+BEGIN_SRC emacs-lisp :results output raw :exports results
   (let* ((dir "posts")
-         (files (directory-files dir t "\\.org$" t)) 
-         plist)
+         (files (directory-files dir t "^[^\\.][^#].*\\.org$" t))
+         entries)
     (dolist (file files)
-       (setq plist (org-combine-plists (org-babel-with-temp-filebuffer file (org-export-get-environment))))
-       (princ 
-        (format "* %s [[file:%s][%s]]\n\n%s\n\nLast update: %s\n\n" 
-                (plist-get plist :status)
-                (concat dir "/" (file-name-nondirectory file))
-                (car (plist-get plist :title)) 
-                (plist-get plist :description) 
-                (car (plist-get plist :date)))
-        )
+      (let* ((path (concat dir "/" (file-name-nondirectory file)))
+             (git-date (format-time-string "%Y-%m-%d" (date-to-time (magit-git-string "log" "-1" "--format=%ci" file))))
+             (env (org-combine-plists (org-babel-with-temp-filebuffer file (org-export-get-environment)))))
+        (plist-put env :path path)
+        (plist-put env :git-date git-date)
+        (push env entries)))
+    (sort entries (lambda (a b) (string< (plist-get a :git-date) (plist-get b :git-date))))
+    (setq entries (nreverse entries))
+    (dolist (entry entries)
+      (princ 
+       (format "* %s [[file:%s][%s]]\n\n%s\n\nLast update: %s\n\n" 
+               (plist-get entry :status)
+               (plist-get entry :path)
+               (car (plist-get entry :title)) 
+               (plist-get entry :description)
+               (plist-get entry :git-date)))
       ))
 #+END_SRC
 
