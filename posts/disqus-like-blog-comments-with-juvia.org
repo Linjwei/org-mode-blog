@@ -49,7 +49,7 @@ Then change to the new user and get the source code:
 
 Configure the application in =config/application.yml= (change only production):
 
-#+BEGIN_SRC conf
+#+BEGIN_SRC yaml
 production:
   base_url: http://juvia.mysite.com
   from: comments@myemail.com
@@ -58,7 +58,7 @@ production:
 
 And setup the database in =config/database.yml= (change only production):
 
-#+BEGIN_SRC conf
+#+BEGIN_SRC yaml
 production:
   adapter: mysql2
   database: juvia
