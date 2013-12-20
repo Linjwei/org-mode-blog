@@ -89,7 +89,7 @@ I'm using port 3333 here because 3000 (the default) is already occupied on my se
 
 Next we have to proxy the traffic from Apache to the rails server. For this I created a Virtual Host =/etc/apache2/sites-available/juvia.mysite.com=:
 
-#+BEGIN_SRC conf
+#+BEGIN_SRC apache
   <VirtualHost 8.8.8.8:80>
       ServerAdmin info@mysite.com
       ServerName juvia.mysite.com
@@ -99,8 +99,8 @@ Next we have to proxy the traffic from Apache to the rails server. For this I cr
   
       ProxyRequests Off
       <Proxy *>
-      Order deny,allow
-      Allow from all
+          Order deny,allow
+          Allow from all
       </Proxy>
   </VirtualHost>
 #+END_SRC
