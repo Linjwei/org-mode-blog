@@ -1,6 +1,6 @@
 #+TITLE: Steckerhalter's Dies und Das oder Was?
 
-I make notes and stuff here for your pleasure (or disgust). You can get in contact with me via [[https://twitter.com/steckerhalter][Twitter]] if you like. 
+I make notes and stuff here for your pleasure (or disgust). You can get in contact with me via [[https://twitter.com/steckerhalter][Twitter]] if you like.
 
 The site is all cooked with [[http://orgmode.org/][Emacs Org mode]]. I'm an Emacs lover and have some goodies ready for you:
 
@@ -9,25 +9,4 @@ The site is all cooked with [[http://orgmode.org/][Emacs Org mode]]. I'm an Emac
 
 ---------------------------------------------------------------------------------------------------------
 
-#+BEGIN_SRC emacs-lisp :results output raw :exports results
-  (let* ((dir "posts")
-         (files (directory-files dir t "^[^\\.][^#].*\\.org$" t))
-         entries)
-    (dolist (file files)
-      (let* ((path (concat dir "/" (file-name-nondirectory file)))
-             (git-date (date-to-time (magit-git-string "log" "-1" "--format=%ci" file)))
-             (env (org-combine-plists (org-babel-with-temp-filebuffer file (org-export-get-environment)))))
-        (plist-put env :path path)
-        (plist-put env :git-date git-date)
-        (push env entries)))
-    (setq entries (sort entries (lambda (a b) (time-less-p (plist-get a :git-date) (plist-get b :git-date)))))
-    (setq entries (nreverse entries))
-    (dolist (entry entries)
-      (princ 
-       (format "* [[file:%s][%s]]\n\n%s\n\nLast update: %s\n\n" 
-               (plist-get entry :path)
-               (car (plist-get entry :title)) 
-               (plist-get entry :description)
-               (format-time-string "%Y-%m-%d %H:%M" (plist-get entry :git-date))))
-      ))
-#+END_SRC
+#+INCLUDE: "elisp/index.el" src emacs-lisp :results output raw :exports results

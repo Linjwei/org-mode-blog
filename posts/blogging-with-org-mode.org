@@ -1,6 +1,5 @@
 #+TITLE: Blogging with Org mode
-#+STATUS: IN PROGRESS
-#+DESCRIPTION: How I use Emacs Org mode as a blogging tool (not done with that yet :)
+#+DESCRIPTION: How I use Emacs Org mode as a blogging tool. It's a bit a pain to set it up, but once it works it's great because writing with Org mode is great...
 #+KEYWORDS: org-mode org emacs blogging
 
 I was fed up with all the blogging tools I had used so far. I really wanted to use Emacs and Org mode to blog so I looked at some of the options listed on the [[http://orgmode.org/worg/org-blog-wiki.html][Org mode homepage]] like =o-blog= or =blog-files=. For me this was much too complicated. I didn't want to use external tools nor get too fancy like =o-blog=. It should just be a plain Org mode export.
@@ -15,45 +14,13 @@ The source code for this project [[https://github.com/steckerhalter/org-mode-blo
 
 The first thing you need is to define a project that the export function will use:
 
-#+BEGIN_SRC emacs-lisp :results silent
-  (setq org-publish-project-alist
-        '(("blog"
-           :components ("blog-content" "blog-static"))
-          ("blog-content"
-           :base-directory "~/org-mode-blog/"
-           :base-extension "org"
-           :publishing-directory org-mode-blog-publishing-directory
-           :recursive t
-           :publishing-function org-html-publish-to-html
-           :export-with-tags nil
-           :headline-levels 4
-           :auto-sitemap t
-           :sitemap-title "Sitemap"
-           :section-numbers nil
-           :with-toc nil
-           :with-author nil
-           :with-creator nil
-           :html-doctype "html5"
-           :html-preamble nil
-           :html-postamble "<hr><div id='comments'></div>"
-           :html-head  "<link rel=\"stylesheet\" href=\"/css/style.css\" type=\"text/css\"/>\n"
-           :html-head-extra "<script async src=\"/js/juvia.js\"></script>"
-           :html-html5-fancy t
-           :html-head-include-default-style nil
-           )
-          ("blog-static"
-           :base-directory "~/org-mode-blog/"
-           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf"
-           :publishing-directory org-mode-blog-publishing-directory
-           :recursive t
-           :publishing-function org-publish-attachment)))
-#+END_SRC
+#+INCLUDE: "../elisp/org-publish-project-alist.el" src emacs-lisp
 
-Evaluate that expression by pressing =C-c C-c= inside the block and use =org-publish-all= to export everything to html.
+After having set the =org-publish-project-alist= variable it's possible to use =org-publish-all= to export the blog to html.
 
-The destination  is the =:publishing-directory= which is read from my variable =org-mode-blog-publishing-directory=. It can be a local directory like =~/public_html= or a remote location like =/ssh:user@server:directory=.
+The destination is the =:publishing-directory= which is read from the variable =org-mode-blog-publishing-directory= which has to be set beforehand. It can be a local directory like =~/public_html= or a remote location like =/ssh:user@server:directory=.
 
-The source code is in the directory which looks something like this:
+The file tree in the base directory looks something like this:
 
 #+BEGIN_SRC text
 blog
@@ -92,37 +59,16 @@ To get the title, description and other properties from the file...
 gives something like this:
 
 #+BEGIN_SRC emacs-lisp
-(:author nil :creator Emacs 24.3.50.1 (Org mode 8.2.4) :email user@example.com :exclude-tags (noexport) :headline-levels 3 :language en :preserve-breaks nil :section-numbers t :select-tags (export) :time-stamp-file t :with-archived-trees headline :with-author t :with-clocks nil :with-creator comment :with-date t :with-drawers (not LOGBOOK) :with-email nil :with-emphasize t :with-entities t :with-fixed-width t :with-footnotes t :with-inlinetasks t :with-latex t :with-planning nil :with-priority nil :with-smart-quotes nil :with-special-strings t :with-statistics-cookies t :with-sub-superscript t :with-toc t :with-tables t :with-tags t :with-tasks t :with-timestamps t :with-todo-keywords t :title (Blogging with Org mode) :date (2012-12-15) :status IN PROGRESS :description How I use Emacs Org mode as a blogging tool (not done with that yet :) :keywords org-mode org emacs blogging :back-end nil :translate-alist nil :footnote-definition-alist nil :id-alist nil)
+(:author nil :creator Emacs 24.3.50.1 (Org mode 8.2.4) :email user@example.com :exclude-tags (noexport) :headline-levels 3 :language en :preserve-breaks nil :section-numbers t :select-tags (export) :time-stamp-file t :with-archived-trees headline :with-author t :with-clocks nil :with-creator comment :with-date t :with-drawers (not LOGBOOK) :with-email nil :with-emphasize t :with-entities t :with-fixed-width t :with-footnotes t :with-inlinetasks t :with-latex t :with-planning nil :with-priority nil :with-smart-quotes nil :with-special-strings t :with-statistics-cookies t :with-sub-superscript t :with-toc t :with-tables t :with-tags t :with-tasks t :with-timestamps t :with-todo-keywords t :title (Blogging with Org mode) :date (2012-12-15) :description How I use Emacs Org mode as a blogging tool (not done with that yet :) :keywords org-mode org emacs blogging :back-end nil :translate-alist nil :footnote-definition-alist nil :id-alist nil)
 #+END_SRC
 
 ** Generate the posts index
 
-A code block in =index.org= is used to parse all the files:
+A code block in =index.org= which is included from the Elisp source [[file:~/org-mode-blog/elisp/index.el][index.el]] is used to parse all the files:
 
-#+BEGIN_SRC emacs-lisp :results output raw :exports code
-  (let* ((dir "posts")
-           (files (directory-files dir t "^[^\\.][^#].*\\.org$" t))
-           entries)
-      (dolist (file files)
-        (let* ((path (concat dir "/" (file-name-nondirectory file)))
-               (git-date (date-to-time (magit-git-string "log" "-1" "--format=%ci" file)))
-               (env (org-combine-plists (org-babel-with-temp-filebuffer file (org-export-get-environment)))))
-          (plist-put env :path path)
-          (plist-put env :git-date git-date)
-          (push env entries)))
-      (setq entries (sort entries (lambda (a b) (time-less-p (plist-get a :git-date) (plist-get b :git-date)))))
-      (setq entries (nreverse entries))
-      (dolist (entry entries)
-        (princ
-         (format "* [[file:%s][%s]]\n\n%s\n\nLast update: %s\n\n"
-                 (plist-get entry :path)
-                 (car (plist-get entry :title))
-                 (plist-get entry :description)
-                 (format-time-string "%Y-%m-%d %H:%M" (plist-get entry :git-date))))
-        ))
-#+END_SRC
+#+INCLUDE: "../elisp/index.el" src emacs-lisp
 
-After having retrieved the environment I add the filename to each entry and assemble the in =entries=. Then I sort the entries based on the date parsed for each file from Git. And the last =dolist= formats the data for Org output.
+After having retrieved the environment I add the file path and the file's Git date to each entry and assemble them in =entries=. Then I sort the entries based on the Git date so that the last modified entry is on top and run =dolist= on the result to format the data for Org output.
 
 On an Org mode export the output of the Elisp code is written directly into the buffer in Org syntax which is then used to create the html.
 
@@ -143,11 +89,9 @@ I'm adding the necessary Javascript to =:html-head-extra=:
 and =:html-postamble= contains the CSS element:
 
 #+BEGIN_SRC emacs-lisp
-  :html-postamble "<div id='comments'></div>"
+  :html-postamble "<hr><div id='comments'></div>"
 #+END_SRC
 
 That's all there is to do in the frontend.
 
 For the server side setup see my post [[file:disqus-like-blog-comments-with-juvia.org][Disqus-like blog comments with Juvia]].
-
-* TODO Adding a header and a footer
