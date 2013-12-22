@@ -20,7 +20,8 @@
          :html-postamble "<hr><div id='comments'></div>"
          :html-head  "<link rel=\"stylesheet\" href=\"/css/style.css\" type=\"text/css\"/>\n"
          :html-head-extra "<script async=\"true\" src=\"/js/juvia.js\"></script>
-                          <link rel=\"shortcut icon\" href=\"/img/steckerhalter.ico\">"
+         <link rel=\"shortcut icon\" href=\"/img/steckerhalter.ico\">
+         <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1\" />"
          :html-html5-fancy t
          :html-head-include-default-style nil
          )
