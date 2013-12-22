@@ -1,5 +1,4 @@
 #+TITLE: Emacs Tips and Tricks
-#+DATE: 2012-12-18
 #+STATUS: IN PROGRESS
 #+DESCRIPTION: I'm gathering all the cool tricks that I find out about Emacs in this post (mostly for myself because I keep forgetting them again :)...
 #+KEYWORDS: emacs tips tricks
@@ -17,6 +16,8 @@ All this stuff can be found elsewhere, but it is scattered about in libraries, m
 #+END_QUOTE
 
 * Finding stuff
+
+** Helm
 
 [[https://github.com/emacs-helm/helm][Emacs Helm]] is the most useful helper to query all kinds of resources for something that you might want to look up. For in-depth Helm information see my post [[file:emacs-helm-know-how.org][Emacs Helm Know How]].
 
@@ -37,6 +38,10 @@ For example =helm-apropos= has three Actions for =Commands=:
 - Describe Function: Display the full documentation of FUNCTION (a symbol).
 - Find Function: Finds the source file containing the definition of the function near point
 - Info Lookup: Find the command in the Info manual
+
+** Built-in
+
+| =C-u C-x \== | Print info (like faces etc.) on cursor position (on screen and within buffer) in Help buffer. | =what-cursor-position= |
 
 * Deleting whitespace
 

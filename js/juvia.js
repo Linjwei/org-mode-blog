@@ -6,7 +6,7 @@
         topic_url    : location.href,
         topic_title  : document.title || location.href,
         include_base : !window.Juvia,
-        include_css  : !window.Juvia,
+        include_css  : false,
         comment_order: 'latest-first'
     };
 

@@ -1,8 +1,9 @@
+@import url("http://fonts.googleapis.com/css?family=Inconsolata|Lekton");
 @import url("bootstrap.css");
 @import url("darkstrap.css");
 
-.twitter {
-    float: right !important;
+body {
+    font-family: 'Inconsolata';
 }
 
 .bloglinks {
@@ -26,7 +27,6 @@ p.verse { margin-left: 3%; }
 pre.src {
     position: relative;
     overflow: visible;
-    padding-top: 1.2em;
 }
 pre.src:before {
     display: none;
@@ -70,14 +70,62 @@ textarea { overflow-x: auto; }
 { background-color: #ffff00; color: #000000; font-weight: bold; }
 
 .juvia-preview-content,
-.juvia-comment > .juvia-metadata {
-    background: #555 !important;
+    background: #555;
+}
+
+.juvia-comment {
+    min-height: 64px;
+    margin-bottom: 30px;
+}
+
+.juvia-comment .juvia-author {
+    font-weight: bold;
+}
+.juvia-comment .juvia-avatar {
+    float: left;
+    margin-top: -8px;
+    margin-left: -92px;
+}
+
+.juvia-comment .juvia-metadata {
+    margin-left: 84px;
+    position: relative;
+    background: #555;
+    margin-bottom: 0.5em;
+    padding: 8px;
+}
+
+.juvia-comment .juvia-creation-date {
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    font-size: 70%;
+}
+
+.juvia-comment .juvia-data {
+    margin-left: 92px;
 }
 
 .juvia-preview-content {
-    border: none !important;
+    padding: 3px 15px;
 }
 
 .juvia-textarea-field textarea {
     width: 99% !important;
+}
+
+.sidebar {
+    position: fixed;
+    width: 48px;
+    text-align: left;
+}
+
+.sidebar a {
+    margin-bottom: 25px;
+    display: inline-block;
+}
+
+#content,
+#postamble {
+    margin-left: 60px;
 }

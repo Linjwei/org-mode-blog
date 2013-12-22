@@ -14,9 +14,11 @@ The source code for this project [[https://github.com/steckerhalter/org-mode-blo
 
 The first thing you need is to define a project that the export function will use:
 
-#+INCLUDE: "../elisp/org-publish-project-alist.el" src emacs-lisp
+#+INCLUDE: "../elisp/org-mode-blog-setup.el" src emacs-lisp
 
-After having set the =org-publish-project-alist= variable it's possible to use =org-publish-all= to export the blog to html.
+After having set the =org-publish-project-alist= variable I define a function =org-mode-blog-preamble= that gets the content for the preamble (the sidebar) from the file [[https://github.com/steckerhalter/org-mode-blog/blob/master/html/preamble.html][preamble.html (source on Github)]]. 
+
+Having defined all of that it's possible to use =org-publish-all= to export the blog to html.
 
 The destination is the =:publishing-directory= which is read from the variable =org-mode-blog-publishing-directory= which has to be set beforehand. It can be a local directory like =~/public_html= or a remote location like =/ssh:user@server:directory=.
 
@@ -64,7 +66,7 @@ gives something like this:
 
 ** Generate the posts index
 
-A code block in =index.org= which is included from the Elisp source [[file:~/org-mode-blog/elisp/index.el][index.el]] is used to parse all the files:
+A code block in =index.org= which is included from the Elisp source [[https://github.com/steckerhalter/org-mode-blog/blob/master/elisp/index.el][index.el (source on Github)]] is used to parse all the files:
 
 #+INCLUDE: "../elisp/index.el" src emacs-lisp
 
