@@ -272,6 +272,7 @@ abbr.initialism {
 }
 
 blockquote {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   padding: 0 0 0 15px;
   margin: 0 0 20px;
   border-left: 5px solid #eeeeee;
@@ -1871,10 +1872,6 @@ textarea {
 }
 
 @media (max-width: 767px) {
-  body {
-    padding-right: 20px;
-    padding-left: 20px;
-  }
   .navbar-fixed-top,
   .navbar-fixed-bottom,
   .navbar-static-top {
