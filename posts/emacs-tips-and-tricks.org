@@ -5,14 +5,22 @@
 
 * Useful external resources
 
-** Elisp Cookbook
+** EmacsWiki
 
-[[http://www.emacswiki.org/emacs/ElispCookbook][A page on the EmacsWiki]] with information on how to do many common tasks with Elisp:
+*** [[http://www.emacswiki.org/emacs/ElispCookbook][Elisp Cookbook]]
 
 #+BEGIN_QUOTE
 This page contains snippets of code that demonstrate basic EmacsLisp programming operations in the spirit of the O’Reilly cookbook series of books. For every task addressed, a worked-out solution is presented as a short, focused, directly usable piece of code.
 
 All this stuff can be found elsewhere, but it is scattered about in libraries, manuals, etc. It would be helpful to have here in one spot.
+#+END_QUOTE
+
+*** [[http://www.emacswiki.org/emacs/EmacsNiftyTricks][EmacsNiftyTricks]]
+
+#+BEGIN_QUOTE
+Some programmers are enormously productive using Emacs. Their hands seem to quickly run over the keyboard accomplishing things in minutes that it takes others hours to accomplish. They must know many Emacs tricks which allow them to work rapidly. If asked, they are hesitant to show their tricks. Understandably so, it would probably take many hours for them to show me all their tricks.
+
+This web page describes all their little tricks for using Emacs effectively.
 #+END_QUOTE
 
 * Finding stuff
@@ -43,6 +51,15 @@ For example =helm-apropos= has three Actions for =Commands=:
 
 | =C-u C-x \== | Print info (like faces etc.) on cursor position (on screen and within buffer) in Help buffer. | =what-cursor-position= |
 
+
+* Get back to where you were (Recursive Edit)
+
+For example, when replacing some text with =M-%= or =M-C-%= you can replace and edit the matches with =C-w= or just edit with =C-r= to touch up some of the entries you are replacing along the way when they are a special case. When you're done you punch =C-M-c= and you snap back into =query-replace= or =query-replace-regexp=. You can even change buffers or visit other files – almost anything.
+
+* Navigating
+
+Use =C-SPC= to set the mark, and =C-x C-x= to go back. A nice but often unknown feature is using universal argument: =C-u C-SPC=. It’s an easy way to navigate back to your previous editing spots by jumping to the positions stored in the buffer’s local mark ring. Repeated calls will cycle through the ring of marks.
+
 * Deleting whitespace
 
 | =M-\=     | Delete spaces and tabs around point                                                                                                                             | =delete-horizontal-space= |
@@ -69,3 +86,7 @@ For example =helm-apropos= has three Actions for =Commands=:
 * Yanking
 
 | =C-u C-y= | Yanks like =C-y= but leaves the cursor in front of the inserted text, and sets the mark at the end. | =yank= |
+
+* Searching
+
+When doing isearch, =C-w= adds the word following point to the search buffer.
