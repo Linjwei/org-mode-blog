@@ -1,7 +1,42 @@
 #+TITLE: Emacs Tips and Tricks
-#+STATUS: IN PROGRESS
 #+DESCRIPTION: I'm gathering all the cool tricks that I find out about Emacs in this post (mostly for myself because I keep forgetting them again :)...
 #+KEYWORDS: emacs tips tricks
+
+* Emacs startup
+
+Before the personal init file (=~/.emacs=, =~/.emacs.el=, or =~/.emacs.d/init.el=) Emacs loads the site lisp and startup files =site-lisp.el= and =site-start.el=, if found.
+
+If you install Emacs with a package manager usually the distribution (e.g. Debian) loads additional libraries via =site-lisp.el= for all users that start Emacs.
+
+Emacs searches the default =load-path= for these files which could look like this:
+
+#+BEGIN_EXAMPLE
+/usr/local/share/emacs/24.3.50/lisp
+/usr/local/share/emacs/24.3.50/lisp/vc
+/usr/local/share/emacs/24.3.50/lisp/url
+...
+#+END_EXAMPLE
+
+There are some Emacs command line that affect this behavior;
+
+#+BEGIN_EXAMPLE
+--no-site-file              do not load site-start.el
+--no-site-lisp, -nsl        do not add site-lisp directories to load-path
+--quick, -Q                 equivalent to: -q --no-site-file --no-site-lisp --no-splash
+--no-init-file, -q          load neither ~/.emacs nor default.el
+#+END_EXAMPLE
+
+To debug issues with your personal init file usually =-Q= is a good choice to see if the issue is also present without your customizations.
+
+After the site files and the personal init file, =default.el= is loaded. It's possible to use this file for customizations that should happen at the end of the init process.
+
+If for example you add =~/.emacs.d/elisp= to the load-path in =~/.emacs=:
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/elisp/")
+#+END_SRC
+
+You could put =default.el= into that directory and it should get loaded after your init file.
 
 * Useful external resources
 
@@ -51,7 +86,6 @@ For example =helm-apropos= has three Actions for =Commands=:
 
 | =C-u C-x \== | Print info (like faces etc.) on cursor position (on screen and within buffer) in Help buffer. | =what-cursor-position= |
 
-
 * Get back to where you were (Recursive Edit)
 
 For example, when replacing some text with =M-%= or =M-C-%= you can replace and edit the matches with =C-w= or just edit with =C-r= to touch up some of the entries you are replacing along the way when they are a special case. When you're done you punch =C-M-c= and you snap back into =query-replace= or =query-replace-regexp=. You can even change buffers or visit other files – almost anything.
@@ -69,11 +103,12 @@ Use =C-SPC= to set the mark, and =C-x C-x= to go back. A nice but often unknown 
 
 * Marking
 
-| =M-@=   | Set mark after end of next word.  This does not move point.                    | =mark-word=         |
-| =C-M-@= | Set mark after end of following balanced expression. This does not move point. | =mark-sexp=         |
-| =M-h=   | Move point to the beginning of the current paragraph, and set mark at the end. | =mark-paragraph=    |
-| =C-M-h= | Move point to the beginning of the current defun, and set mark at the end.     | =mark-defun=        |
-| =C-x h= | Move point to the beginning of the buffer, and set mark at the end.            | =mark-whole-buffer= |
+| =M-@=     | Set mark after end of next word.  This does not move point.                    | =mark-word=             |
+| =C-M-@=   | Set mark after end of following balanced expression. This does not move point. | =mark-sexp=             |
+| =M-h=     | Move point to the beginning of the current paragraph, and set mark at the end. | =mark-paragraph=        |
+| =C-M-h=   | Move point to the beginning of the current defun, and set mark at the end.     | =mark-defun=            |
+| =C-x h=   | Move point to the beginning of the buffer, and set mark at the end.            | =mark-whole-buffer=     |
+| =C-x SPC= | Makes a rectangular region (new in Emacs 24.4)                                 | =rectangular-mark-mode= |
 
 * Killing
 
@@ -89,4 +124,4 @@ Use =C-SPC= to set the mark, and =C-x C-x= to go back. A nice but often unknown 
 
 * Searching
 
-When doing isearch, =C-w= adds the word following point to the search buffer.
+When doing isearch, =C-w= adds the word following point to the search buffer. But even better with Emacs 24.4 there is =M-s .= to do the same thing in one go.
