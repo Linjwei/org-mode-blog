@@ -42,17 +42,17 @@ You could put =default.el= into that directory and it should get loaded after yo
 
 ** Maximized frames (Emacs 24.4)
 
-To get Emacs to maximize the frame on startup and for newly created frames you can use the new value =maximized= for the frame-alist parameter =fullscreen=. Your Emacs init file could contain...
+To get Emacs to maximize the frame on startup and for newly created frames you can use the new value =maximized= for the frame-alist parameter =fullscreen=. Your Emacs init file could contain:
 
 #+BEGIN_SRC emacs-lisp
   (modify-all-frames-parameters '((fullscreen . maximized)))
 #+END_SRC
 
-...which maximizes the current startup frame and also ensures that all future frames are maximized by modifying =default-frame-alist=.
+which would maximize the startup frame and also ensure that all future frames are maximized by modifying =default-frame-alist=.
 
 *** New command-line option
 
-There has been added a new command-line option -mm (--maximized) which maximizes the initial frame.
+There has been added a new command-line option =-mm= or =--maximized= which maximizes the initial frame.
 
 *** Toggling the current frame
 
