@@ -4,6 +4,8 @@
 
 * Emacs startup
 
+** Init files
+
 Before the personal init file (=~/.emacs=, =~/.emacs.el=, or =~/.emacs.d/init.el=) Emacs loads the site lisp and startup files =site-lisp.el= and =site-start.el=, if found.
 
 If you install Emacs with a package manager usually the distribution (e.g. Debian) loads additional libraries via =site-lisp.el= for all users that start Emacs.
@@ -38,6 +40,24 @@ If for example you add =~/.emacs.d/elisp= to the load-path in =~/.emacs=:
 
 You could put =default.el= into that directory and it should get loaded after your init file.
 
+** Maximized frames (Emacs 24.4)
+
+To get Emacs to maximize the frame on startup and for newly created frames you can use the new value =maximized= for the frame-alist parameter =fullscreen=. Your Emacs init file could contain...
+
+#+BEGIN_SRC emacs-lisp
+  (modify-all-frames-parameters '((fullscreen . maximized)))
+#+END_SRC
+
+...which maximizes the current startup frame and also ensures that all future frames are maximized by modifying =default-frame-alist=.
+
+*** New command-line option
+
+There has been added a new command-line option -mm (--maximized) which maximizes the initial frame.
+
+*** Toggling the current frame
+
+The maximization state of the current frame can later be toggled with =ESC <f10>= or =M-x toggle-frame-maximized=. 
+
 * Useful external resources
 
 ** EmacsWiki
@@ -64,7 +84,7 @@ This web page describes all their little tricks for using Emacs effectively.
 
 [[https://github.com/emacs-helm/helm][Emacs Helm]] is the most useful helper to query all kinds of resources for something that you might want to look up. For in-depth Helm information see my post [[file:emacs-helm-know-how.org][Emacs Helm Know How]].
 
-I'm going to list my custom bindings to the appropriate Helm commands here.
+I'm also going to list my custom bindings to the appropriate Helm commands here.
 
 | my shortcut | shortcut    | command             | description                                                           |
 |-------------+-------------+---------------------+-----------------------------------------------------------------------|
@@ -82,9 +102,11 @@ For example =helm-apropos= has three Actions for =Commands=:
 - Find Function: Finds the source file containing the definition of the function near point
 - Info Lookup: Find the command in the Info manual
 
+I especially encourage you to use =helm-locate-library=, I have already discovered valuable libraries that are part of Emacs which I probably would have never known about.
+
 ** Built-in
 
-| =C-u C-x \== | Print info (like faces etc.) on cursor position (on screen and within buffer) in Help buffer. | =what-cursor-position= |
+| =C-u C-x ==  | Print info (like faces etc.) on cursor position (on screen and within buffer) in Help buffer. | =what-cursor-position= |
 
 * Get back to where you were (Recursive Edit)
 
