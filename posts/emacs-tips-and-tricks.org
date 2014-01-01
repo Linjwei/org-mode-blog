@@ -168,12 +168,16 @@ When doing isearch, =C-w= adds the word following point to the search buffer. Bu
 * Org mode
 ** Visibility cycling
 
-=C-c C-k= (=org-kill-note-or-show-branches=) will show all the subheadings and not just the top-level ones like =TAB= does.
+=S-TAB= or =C-u TAB= cycles the visibility for the whole buffer.
+
+=C-u C-u TAB= switches to the startup visibility.
+
+=C-u C-u C-u TAB= shows everything.
+
+=C-c C-k= (=org-kill-note-or-show-branches=) will show all the subheadings of the current headline and not just the top-level ones like =TAB= does.
 
 ** Searching
 
 =C-c C-j= (=org-goto=) is a great way to search an Org mode file. It will use a copy of the current buffer so you can change the visibility there as you like leaving the original buffer unchanged. Pressing =C-g= will put you back into the original unchanged buffer. Pressing =RET= puts you at the location where you just have been and exposes the headlines above.
 
 With a prefix (=C-u C-c C-j=) the command will use an alternative interface that lets you filter through the headlines.
-
-
