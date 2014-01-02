@@ -63,6 +63,17 @@ There has been added a new command-line option =-mm= or =--maximized= which maxi
 
 * Useful external resources
 
+** [[http://www.nongnu.org/emacs-tiny-tools/elisp-coding/][Elisp Coding]]
+
+Awesome in-depth Elisp know-how and suggestions. I found this when I was looking for more information on macros.
+
+#+BEGIN_QUOTE
+This document contains some guidelines that were found handy. There have also appeared
+also very good articles in the Usenet Emacs newsgroups and many good articles may have
+passed by, but hope you find those included interesting. It is recommended that you first
+read some elementary lisp reference before reading this paper. 
+#+END_QUOTE
+
 ** EmacsWiki
 
 *** [[http://www.emacswiki.org/emacs/ElispCookbook][Elisp Cookbook]]
