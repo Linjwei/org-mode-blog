@@ -81,6 +81,20 @@ Some programmers are enormously productive using Emacs. Their hands seem to quic
 This web page describes all their little tricks for using Emacs effectively.
 #+END_QUOTE
 
+* Web searches
+
+Context switches are annoying. Most of the time you want to look something up on the web. You switch to some browser, type the search, scan for what you were looking for and get back to Emacs. Usually you don't really need a full blown browser for this. That's where =eww= comes in handy, the *Emacs Web Wowser* (Emacs 24.4 and later).
+
+Speed is important. EWW uses DuckDuckgo to search by default which is slow. Google is fast but the results are not nicely formatted, hence I'm using the [[https://startpage.com][startpage.com]] mobile search:
+
+#+BEGIN_SRC emacs-lisp
+  (setq eww-search-prefix "https://startpage.com/do/m/mobilesearch?query=")
+#+END_SRC
+
+Type =M-x eww= and enter either search terms or an URL.
+
+** TODO put a table shortcuts here generated with my new library
+
 * Finding stuff
 
 ** Helm
