@@ -46,7 +46,6 @@ pre.src-perl:before  { content: 'Perl'; }
 pre.src-java:before  { content: 'Java'; }
 pre.src-sql:before   { content: 'SQL'; }
 
-table { border-collapse:collapse; }
 dt { font-weight: bold; }
 .footpara:nth-child(2) { display: inline; }
 .footpara { display: block; }

@@ -71,7 +71,7 @@ Awesome in-depth Elisp know-how and suggestions. I found this when I was looking
 This document contains some guidelines that were found handy. There have also appeared
 also very good articles in the Usenet Emacs newsgroups and many good articles may have
 passed by, but hope you find those included interesting. It is recommended that you first
-read some elementary lisp reference before reading this paper. 
+read some elementary lisp reference before reading this paper.
 #+END_QUOTE
 
 ** EmacsWiki
@@ -94,7 +94,7 @@ This web page describes all their little tricks for using Emacs effectively.
 
 * Web searches
 
-Context switches are annoying. Most of the time you want to look something up on the web. You switch to some browser, type the search, scan for what you were looking for and get back to Emacs. Usually you don't really need a full blown browser for this. That's where =eww= comes in handy, the *Emacs Web Wowser* (Emacs 24.4 and later).
+Context switches are annoying. Most of the time you want to look something up on the web. You switch to some browser, type the search, scan for what you were looking for and get back to Emacs. Usually you don't really need a full blown browser for this. That's where EWW comes in handy, the *Emacs Web Wowser* (Emacs 24.4 and later).
 
 Speed is important. EWW uses DuckDuckgo to search by default which is slow. Google is fast but the results are not nicely formatted, hence I'm using the [[https://startpage.com][startpage.com]] mobile search:
 
@@ -104,7 +104,43 @@ Speed is important. EWW uses DuckDuckgo to search by default which is slow. Goog
 
 Type =M-x eww= and enter either search terms or an URL.
 
-** TODO put a table shortcuts here generated with my new library
+These are the key bindings EWW provides:
+
+| =SPC=       | Scroll text of selected window upward ARG lines; or near full screen if no ARG. |
+| =&=         | Browse the current URL with an external browser.                                |
+| =-=         | Begin a negative numeric argument for the next command.                         |
+| =B=         | Display the bookmarks.                                                          |
+| =C=         | List the URL cookies.                                                           |
+| =H=         | List the eww-histories.                                                         |
+| =b=         | Add the current page to the bookmarks.                                          |
+| =d=         | Download URL under point to `eww-download-directory'.                           |
+| =g=         | Reload the current page.                                                        |
+| =l=         | Go to the previously displayed page.                                            |
+| =n=         | Go to the page marked `next'.                                                   |
+| =p=         | Go to the page marked `previous'.                                               |
+| =q=         | Quit WINDOW and bury its buffer.                                                |
+| =r=         | Go to the next displayed page.                                                  |
+| =t=         | Go to the page marked `top'.                                                    |
+| =u=         | Go to the page marked `up'.                                                     |
+| =DEL=       | Scroll text of selected window down ARG lines; or near full screen if no ARG.   |
+| =S-SPC=     | Scroll text of selected window down ARG lines; or near full screen if no ARG.   |
+| =<backtab>= | Skip to the previous link.                                                      |
+| =<delete>=  | Scroll text of selected window down ARG lines; or near full screen if no ARG.   |
+| =M-n=       | Go to the next bookmark in the list.                                            |
+| =M-p=       | Go to the previous bookmark in the list.                                        |
+
+Make a function to search the kill ring contents or browse an URL and bind global keys:
+
+#+BEGIN_SRC emacs-lisp
+  (defun stk/eww-browse-kill-ring ()
+    (interactive)
+    (eww (current-kill 0 t)))
+
+  (global-set-key (kbd "C-h C-<return>") 'eww)
+  (global-set-key (kbd "C-h RET") 'stk/eww-browse-kill-ring)
+#+END_SRC
+
+You will see that staying in Emacs is much more convenient for many web searches and also some websites.
 
 * Finding stuff
 

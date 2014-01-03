@@ -97,7 +97,10 @@ tbody {
   border-top: 2px solid #666666;
 }
 table {
+  margin-top: 15px;
+  margin-bottom: 15px;
   background-color: #2f2f2f;
+  border-collapse: collapse;
 }
 
 .table-bordered {
