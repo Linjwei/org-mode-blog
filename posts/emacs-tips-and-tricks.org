@@ -140,7 +140,19 @@ Make a function to search the kill ring contents or browse an URL and bind globa
   (global-set-key (kbd "C-h RET") 'stk/eww-browse-kill-ring)
 #+END_SRC
 
-You will see that staying in Emacs is much more convenient for many web searches and also some websites.
+You will see that staying in Emacs is much more convenient for many web searches and also some websites. It is especially convenient to browse source code as you can switch the =eww= buffer into the mode of the source code. For example:
+
+#+BEGIN_SRC emacs-lisp
+(eww "http://www.emacswiki.org/emacs/download/sr-speedbar.el")
+#+END_SRC
+
+Then switch to elisp with =M-x emacs-lisp-mode=. It works just as well for any other code:
+
+#+BEGIN_SRC emacs-lisp
+(eww "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/plain/Makefile")
+#+END_SRC
+
+: M-x makefile-mode
 
 * Finding stuff
 
@@ -157,6 +169,7 @@ I'm also going to list my custom bindings to the appropriate Helm commands here.
 | =C-h 4=     |             | helm-info-elisp     | Elisp info manual: great to lookup information when programming Elisp |
 | =C-h 3=     |             | helm-locate-library | Quick way of getting to the elisp source of a library                 |
 | =C-h C-l=   |             | helm-locate         | Great way of using UNIX =locate= command to find files anywhere       |
+|             | =C-x c t=   | helm-top            | A Helm interface to the UNIX top command                              |
 
 For commands with multiple sources like =helm-apropos=, press =C-o= to get the next source. Often Helm binds multiple Actions to a command. Press =TAB= to choose an action. =RET= on an entry uses the first action.
 
