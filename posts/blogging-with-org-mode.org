@@ -18,6 +18,8 @@ The first thing you need is to define a project that the export function will us
 
 After having set the =org-publish-project-alist= variable I define a function =org-mode-blog-preamble= that gets the content for the preamble (the sidebar) from the file [[https://github.com/steckerhalter/org-mode-blog/blob/master/html/preamble.html][preamble.html (source on Github)]]. 
 
+I use the /preparation-function/ =org-mode-blog-prepare= (which is run before every export) to "touch" =index.org=. The index-file itself is almost never changed but it needs to reflect the changes made in the posts. By updating the modified date of the file I'm ensuring that it will always be published.
+
 Having defined all of that it's possible to use =org-publish-all= to export the blog to html.
 
 The destination is the =:publishing-directory= which is read from the variable =org-mode-blog-publishing-directory= which has to be set beforehand. It can be a local directory like =~/public_html= or a remote location like =/ssh:user@server:directory=.
@@ -47,9 +49,9 @@ I would like to aggregate the posts and make a list with the title as a link, th
 To get the title, description and other properties from the file...
 
 #+BEGIN_SRC org
-  ,#+TITLE: Blogging with Org mode
-  ,#+DESCRIPTION: How I use Emacs Org mode as a blogging tool (not done with that yet :)
-  ,#+KEYWORDS: org-mode org emacs blogging
+,#+TITLE: Blogging with Org mode
+,#+DESCRIPTION: How I use Emacs Org mode as a blogging tool (not done with that yet :)
+,#+KEYWORDS: org-mode org emacs blogging
 #+END_SRC
 
 ...we can use =org-export-get-environment=:
@@ -85,13 +87,13 @@ Juvia is an open source commenting system. It allows you to outsource your comme
 I'm adding the necessary Javascript to =:html-head-extra=:
 
 #+BEGIN_SRC emacs-lisp
-  :html-head-extra "<script async src=\"/js/juvia.js\"></script>"
+:html-head-extra "<script async src=\"/js/juvia.js\"></script>"
 #+END_SRC
 
 and =:html-postamble= contains the CSS element:
 
 #+BEGIN_SRC emacs-lisp
-  :html-postamble "<hr><div id='comments'></div>"
+:html-postamble "<hr><div id='comments'></div>"
 #+END_SRC
 
 That's all there is to do in the frontend.

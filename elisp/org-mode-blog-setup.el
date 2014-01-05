@@ -7,6 +7,7 @@
          :publishing-directory org-mode-blog-publishing-directory
          :recursive t
          :publishing-function org-html-publish-to-html
+         :preparation-function org-mode-blog-prepare
          :export-with-tags nil
          :headline-levels 4
          :auto-sitemap t
@@ -37,3 +38,12 @@
 OPTIONS contains the property list from the org-mode export."
   (let ((base-directory (plist-get options :base-directory)))
     (org-babel-with-temp-filebuffer (expand-file-name "html/preamble.html" base-directory) (buffer-string))))
+
+(defun org-mode-blog-prepare ()
+  "`index.org' should always be exported so touch the file before publishing."
+  (let* ((base-directory (plist-get project-plist :base-directory))
+         (buffer (find-file-noselect (expand-file-name "index.org" base-directory) t)))
+    (with-current-buffer buffer
+      (set-buffer-modified-p t)
+      (save-buffer 0))
+    (kill-buffer buffer)))
