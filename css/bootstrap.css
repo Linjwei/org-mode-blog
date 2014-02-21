@@ -1265,6 +1265,18 @@ textarea {
   h3 {
     page-break-after: avoid;
   }
+  .visible-print {
+    display: inherit !important;
+  }
+  .hidden-print {
+    display: none !important;
+  }
+  .sidebar {
+      display: none !important;
+  }
+  #content, #postamble {
+      margin-left: 0 !important;
+  }
 }
 
 
@@ -1325,15 +1337,6 @@ textarea {
 
 .visible-print {
   display: none !important;
-}
-
-@media print {
-  .visible-print {
-    display: inherit !important;
-  }
-  .hidden-print {
-    display: none !important;
-  }
 }
 
 @media (min-width: 1200px) {
