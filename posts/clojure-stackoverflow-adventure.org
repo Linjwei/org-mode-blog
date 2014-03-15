@@ -1,0 +1,145 @@
+#+TITLE: Clojure Stackoverflow Adventure
+#+DESCRIPTION: How I besieged a Clojure stackoverflow for great good, eh no, but I wish it was like that...
+#+KEYWORDS: clojure stackoverflow atom remove lazy sequence
+
+I was writing a scraper which turned out pretty nicely and I got it working. But then I ran into a bug like that:
+
+#+BEGIN_SRC clojure
+StackOverflowError   clojure.lang.LazySeq.seq (LazySeq.java:60)
+#+END_SRC
+
+I couldn't get hold of it. It was occurring after like 30 minutes into scraping so it was hard to find where it really happened.
+
+I started logging messages. After endless tries I narrowed it down to this bit of code:
+
+#+BEGIN_SRC clojure
+(defn update-proxies [proxies remove?]
+  (let [current-proxy (first proxies)
+        proxies-rest (next proxies)]
+    (when remove?
+      (swap! all-proxies #(remove #{current-proxy} %)))
+    (if proxies-rest
+      proxies-rest
+      (if (empty? @all-proxies)
+        (reset! all-proxies (get-proxies))
+        @all-proxies))))
+#+END_SRC
+
+which was called from:
+
+#+BEGIN_SRC clojure
+(defn write-xml [chnr]
+  (let [file (format "data/chnrs/%s" chnr)
+        xml (atom nil)]
+    (if-not (.exists (io/as-file file))
+      (do (while (not @xml)
+            (reset! xml (apply get-xml chnr (get-proxy @proxies)))
+            (swap! proxies #(update-proxies % (if @xml false true)))) ; <--- called here
+          (when-let [data (try
+                            (parse-xml @xml)
+                            (catch Exception e
+                              (data->file @xml (format "data/chnrs/failed/%s" chnr) :pretty true)
+                              (info (format "Exception at %s: %s" chnr (.getMessage e)))))]
+            (data->file data file :pretty true)
+            (info (format "Wrote %s" file))))
+      (info (format "Skipping %s because it already exists" file)))))
+#+END_SRC
+
+The variable definitions were like:
+
+#+BEGIN_SRC clojure
+(def all-proxies (atom (get-proxies)))
+(def proxies (atom @all-proxies))
+#+END_SRC
+
+=(get-proxies)= would fetch a bunch of proxy strings in the format =119.97.146.16:8080=.
+
+Because I always had to wait such a long time until the bug occurred it was a nasty business. I logged more messages to a file using [[https://github.com/ptaoussanis/timbre][timbre]] which I setup like that:
+
+#+BEGIN_SRC clojure
+(timbre/refer-timbre)
+(timbre/set-config! [:appenders :standard-out :enabled?] false)
+(timbre/set-config! [:appenders :spit :enabled?] true)
+(timbre/set-config! [:shared-appender-config :spit-filename] "scraper.log")
+#+END_SRC
+
+This disables =stdout= logging and logs all messages to =scraper.log=.
+
+After a few more tries I concluded that the overflow was triggered when it tried to access =all-proxies=:
+
+#+BEGIN_SRC clojure
+(if (empty? @all-proxies) ; <-- stackoverflow here
+  (reset! all-proxies (get-proxies))
+  @all-proxies)
+#+END_SRC
+
+Now the weird thing was that the stackoverflow did only happen after the same thing had been run multiple times.
+
+At some point I got lucky. I thought I could log the count of items inside =all-proxies= and the stackoverflow was triggered again right there. But then I moved the declaration further up so that the code would look like:
+
+#+BEGIN_SRC clojure
+(defn update-proxies [proxies remove?]
+  (let [current-proxy (first proxies)
+        proxies-rest (next proxies)]
+    (info (format "count: %s" (count @all-proxies))) ; <-- logging here
+    (when remove?
+      (swap! all-proxies #(remove #{current-proxy} %)))
+    (if proxies-rest
+      proxies-rest
+      (if (empty? @all-proxies)
+        (reset! all-proxies (get-proxies))
+        @all-proxies))))
+#+END_SRC
+
+It was like a miracle. No more stackoverflows!
+
+I have to mention here that my debugging speed improved greatly when I removed the http requests and other overhead and just let the =update-proxies= function churn away. So my learning for the next time:
+
+#+BEGIN_QUOTE
+Isolate the problematic part of the code and try to trigger the bug as fast as possible, getting rid of everything that doesn't matter.
+#+END_QUOTE
+
+I started playing around with the code. 
+
+#+BEGIN_SRC clojure
+(swap! all-proxies #(remove #{current-proxy} %))
+;; I changed that into:
+(swap! all-proxies rest)
+#+END_SRC
+
+And the bug was fixed again. So the problem was apparently with the =lambda= function and =remove=. I had heard that Clojure was using lazy sequences and since the stacktrace was a near-endless monster of:
+
+#+BEGIN_SRC clojure
+StackOverflowError 
+        clojure.lang.LazySeq.seq (LazySeq.java:60)
+        clojure.lang.RT.seq (RT.java:484)
+        clojure.core/seq (core.clj:133)
+        clojure.core/filter/fn--4226 (core.clj:2523)
+        clojure.lang.LazySeq.sval (LazySeq.java:42)
+        clojure.lang.LazySeq.seq (LazySeq.java:60)
+        clojure.lang.RT.seq (RT.java:484)
+        clojure.core/seq (core.clj:133)
+        clojure.core/filter/fn--4226 (core.clj:2523)
+        clojure.lang.LazySeq.sval (LazySeq.java:42)
+        clojure.lang.LazySeq.seq (LazySeq.java:60)
+        clojure.lang.RT.seq (RT.java:484)
+...
+#+END_SRC
+
+I thought that =remove= would probably pile up lazy sequences in =all-proxies= and then Clojure would blow up trying to evaluate those.
+
+The solution then was pretty simple;
+
+#+BEGIN_SRC clojure
+(swap! all-proxies #(doall (remove #{current-proxy} %)))
+#+END_SRC
+
+=doall= is described like this ([[http://clojuredocs.org/clojure_core/clojure.core/doall][ClojureDocs]] has some examples):
+
+#+BEGIN_QUOTE
+When lazy sequences are produced via functions that have side effects, any effects other than those needed to produce the first element in the seq do not occur until the seq is consumed. doall can be used to force any effects. Walks through the successive nexts of the seq, retains the head and returns it, thus causing the entire seq to reside in memory at one time.
+#+END_QUOTE
+
+In my case it helped to prevent the stackoverflow. I'm not totally sure if my assumptions are correct, so please speak up if you know better :)
+
+That's all from the Clojure front for now, folks!
