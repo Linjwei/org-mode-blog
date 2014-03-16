@@ -126,6 +126,17 @@ StackOverflowError
 ...
 #+END_SRC
 
+To get the stacktrace I used the =pst= function after the error had occured:
+
+#+BEGIN_SRC clojure
+clojure.repl/pst
+([] [e-or-depth] [e depth])
+  Prints a stack trace of the exception, to the depth requested. If none supplied, uses the root cause of the
+  most recent repl exception (*e), and a depth of 12.
+#+END_SRC
+
+In my case the trace was just too long so that even doing =(pst 10000)= (shows 10000 entries from the last stacktrace) did not help me.
+
 I thought that =remove= would probably pile up lazy sequences in =all-proxies= and then Clojure would blow up trying to evaluate those.
 
 The solution then was pretty simple;
