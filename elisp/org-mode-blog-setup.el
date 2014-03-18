@@ -10,7 +10,7 @@
          :preparation-function org-mode-blog-prepare
          :export-with-tags nil
          :headline-levels 4
-         :auto-sitemap t
+         :auto-sitemap nil
          :sitemap-title "Sitemap"
          :section-numbers nil
          :with-toc nil
