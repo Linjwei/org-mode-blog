@@ -1,4 +1,6 @@
 #+TITLE: Steckerhalter's Dies und Das oder Was?
+#+AUTHOR: steckerhalter
+#+EMAIL:
 
 I make notes and stuff here for your pleasure (or disgust). You can get in contact with me via [[https://twitter.com/steckerhalter][Twitter]] if you like.
 

@@ -14,6 +14,7 @@
      (format "* [[file:%s][%s]]
 :PROPERTIES:
 :PUBDATE: %s
+:RSS_PERMALINK: %s
 :END:
 %s
 
@@ -23,5 +24,6 @@ Last update: %s
              (plist-get entry :path)
              (car (plist-get entry :title))
              (format-time-string (cdr org-time-stamp-formats) (plist-get entry :git-date))
+             (concat (file-name-sans-extension (plist-get entry :path)) ".html")
              (plist-get entry :description)
              (format-time-string "%Y-%m-%d %H:%M" (plist-get entry :git-date))))))
