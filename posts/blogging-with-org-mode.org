@@ -83,6 +83,8 @@ A code block in =index.org= which is included from the Elisp source [[https://gi
 
 After having retrieved the environment I add the file path and the file's date to each entry and assemble them in =entries=. Then I sort the entries based on the date so that the last modified entry is on top and run =dolist= on the result to format the data for Org output.
 
+For the RSS export I'm adding =PUBDATE= and =RSS_PERMALINK= for each headline so the RSS exporter can figure out the right values when generating the =index.xml=.
+
 On an Org mode export the output of the Elisp code is written directly into the buffer in Org syntax which is then used to create the html.
 
 * Enabling comments

@@ -1,6 +1,5 @@
 #+TITLE: Emacs Helm Know How
 #+DATE: 2013-12-20
-#+STATUS: IN PROGRESS
 #+DESCRIPTION: Helm is a great incremental completion and selection narrowing framework. This post is meant to document some of the awesome features Helm provides...
 #+KEYWORDS: emacs helm narrowing completion files buffer switching
 
