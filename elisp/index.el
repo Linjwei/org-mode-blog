@@ -11,8 +11,17 @@
         (push env entries))))
   (dolist (entry (sort entries (lambda (a b) (time-less-p (plist-get b :git-date) (plist-get a :git-date)))))
     (princ
-     (format "* [[file:%s][%s]]\n\n%s\n\nLast update: %s\n\n"
+     (format "* [[file:%s][%s]]
+:PROPERTIES:
+:PUBDATE: %s
+:END:
+%s
+
+Last update: %s
+
+"
              (plist-get entry :path)
              (car (plist-get entry :title))
+             (format-time-string (cdr org-time-stamp-formats) (plist-get entry :git-date))
              (plist-get entry :description)
              (format-time-string "%Y-%m-%d %H:%M" (plist-get entry :git-date))))))

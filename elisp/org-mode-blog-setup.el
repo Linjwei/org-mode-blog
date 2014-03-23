@@ -31,7 +31,17 @@
          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|ico"
          :publishing-directory org-mode-blog-publishing-directory
          :recursive t
-         :publishing-function org-publish-attachment)))
+         :publishing-function org-publish-attachment)
+        ("blog-rss"
+         :base-directory "~/org-mode-blog/"
+         :base-extension "org"
+         :rss-image-url "http://steckerhalter.co.vu/img/steckerhalter.png"
+         :publishing-directory org-mode-blog-publishing-directory
+         :publishing-function (org-rss-publish-to-rss)
+         :html-link-home "http://steckerhalter.co.vu/"
+         :html-link-use-abs-url t
+         :exclude ".*"
+         :include ("index.org"))))
 
 (defun org-mode-blog-preamble (options)
   "The function that creates the preamble (sidebar) for the blog.
