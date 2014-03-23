@@ -40,6 +40,7 @@
          :publishing-function (org-rss-publish-to-rss)
          :html-link-home "http://steckerhalter.co.vu/"
          :html-link-use-abs-url t
+         :with-toc nil
          :exclude ".*"
          :include ("index.org"))))
 
