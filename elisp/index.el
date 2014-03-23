@@ -4,12 +4,15 @@
   (dolist (file files)
     (catch 'stop
       (let* ((path (concat dir "/" (file-name-nondirectory file)))
-             (git-date (date-to-time (or (magit-git-string "log" "-1" "--format=%ci" file) (throw 'stop nil))))
-             (env (org-combine-plists (org-babel-with-temp-filebuffer file (org-export-get-environment)))))
+             (env (org-combine-plists (org-babel-with-temp-filebuffer file (org-export-get-environment))))
+             (date (or (apply 'encode-time (org-parse-time-string
+                                            (or (car (plist-get env :date)) (throw 'stop nil))))))
+             (git-date (date-to-time (magit-git-string "log" "-1" "--format=%ci" file))))
         (plist-put env :path path)
+        (plist-put env :parsed-date date)
         (plist-put env :git-date git-date)
         (push env entries))))
-  (dolist (entry (sort entries (lambda (a b) (time-less-p (plist-get b :git-date) (plist-get a :git-date)))))
+  (dolist (entry (sort entries (lambda (a b) (time-less-p (plist-get b :parsed-date) (plist-get a :parsed-date)))))
     (princ
      (format "* [[file:%s][%s]]
 :PROPERTIES:
@@ -18,7 +21,8 @@
 :END:
 %s
 
-Last update: %s
+Last update: %s\\\\
+Published: %s
 
 "
              (plist-get entry :path)
@@ -26,4 +30,5 @@ Last update: %s
              (format-time-string (cdr org-time-stamp-formats) (plist-get entry :git-date))
              (concat (file-name-sans-extension (plist-get entry :path)) ".html")
              (plist-get entry :description)
-             (format-time-string "%Y-%m-%d %H:%M" (plist-get entry :git-date))))))
+             (format-time-string "%Y-%m-%d %H:%M" (plist-get entry :git-date))
+             (format-time-string "%Y-%m-%d" (plist-get entry :parsed-date))))))

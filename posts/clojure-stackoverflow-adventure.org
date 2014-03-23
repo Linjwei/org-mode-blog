@@ -1,4 +1,5 @@
 #+TITLE: Clojure Stackoverflow Adventure
+#+DATE: 2014-03-16
 #+DESCRIPTION: How I besieged a Clojure stackoverflow for great good, eh no, but I wish it was like that...
 #+KEYWORDS: clojure stackoverflow atom remove lazy sequence
 

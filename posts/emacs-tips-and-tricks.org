@@ -1,4 +1,5 @@
 #+TITLE: Emacs Tips and Tricks
+#+DATE: 2014-01-04
 #+DESCRIPTION: I'm gathering all the cool tricks that I find out about Emacs in this post (mostly for myself because I keep forgetting them again :)...
 #+KEYWORDS: emacs tips tricks
 #+OPTIONS: toc:t

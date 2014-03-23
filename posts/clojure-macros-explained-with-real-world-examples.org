@@ -1,0 +1,122 @@
+#+TITLE: Clojure Macros explained with real-world examples
+#+DESCRIPTION: Tutorial explaining Clojure Macros based on real code used in the real world :)
+#+KEYWORDS: clojure macros beginner tutorial lisp future
+
+I was shying back from Lisp macros for a long time. It seemed complicated and all the explanations I found were just like that. Why would I even want to use a macro?
+
+At some point I got to a use case where I thought a macro could do the job (even though I was not totally sure what a macro was :).
+
+I had a working function that looked like this:
+
+#+BEGIN_SRC clojure
+(defn scrape-chnrs [chnrs]
+  (let [count (count chnrs) ; total number of items in `chnrs'
+        cursor (atom 0)]    ; counter, init with 0
+    (doseq [chnr chnrs]     ; loop over `chnrs'
+      (write-xml chnr)      ; do something with current `chnr'
+      (swap! cursor inc)    ; increase the counter
+      (info (format "%s/%s" @cursor count))))) ; log the current progress, e.g. 433/1000, then 434/1000 etc.
+#+END_SRC
+
+I wanted to let that function run in the background. In Clojure you can create a =future= for that:
+
+#+BEGIN_SRC clojure :results code
+(future (scrape-chnrs ["1" "2" "3" "4"]))
+#+END_SRC
+
+#+BEGIN_SRC clojure
+#<Future@5f6cb7b7: :pending>
+#+END_SRC
+
+So yeah, the thing was in the background now but I couldn't check the status or cancel it because it had no name. I could give it a name like that:
+
+#+BEGIN_SRC clojure
+(def myfuture (future (scrape-chnrs ["1" "2" "3" "4"])))
+#+END_SRC
+
+But I thought, "Hey! I would like to dynamically specify the name!". I wanted to be able to use:
+
+#+BEGIN_SRC clojure
+(scrape-job "myfuture" ["1" "2" "3" "4"])
+#+END_SRC
+
+which would run and define a future =myfuture=. The macro I wrote is this:
+
+#+BEGIN_SRC clojure
+(defmacro scrape-job [jobname chnrs]
+  (let [name (symbol jobname)] ; convert string (jobname) into symbol
+    `(def name (future (scrape-chnrs chnrs)))))
+#+END_SRC
+
+What happens now when this macro is run? It as kind of a two-pass thing. In the first pass the macro is expanded, meaning that (we simulate this first pass with =macroexpand=)
+
+#+BEGIN_SRC clojure :results raw
+(macroexpand '(scrape-job "myfuture" ["1" "2" "3" "4"]))
+#+END_SRC
+
+is transformed into:
+
+#+BEGIN_SRC clojure
+(def myfuture (clojure.core/future (zefix-clj.scrape/scrape-chnrs ["1" "2" "3" "4"])))
+#+END_SRC
+
+In this case I had "quoted" the expression =(def ~name (future (scrape-chnrs ~chnrs)))= with a backtick, which means that in the first pass this expressions is not evaluated but for elements prefixed with =~=. In this case these are =name= which was passed in as =myfuture= and the numbers.
+
+Now the same macro can also be written without backtick notation:
+
+#+BEGIN_SRC clojure
+(defmacro scrape-job [jobname chnrs]
+  (let [name (symbol jobname)] ; convert string (jobname) into symbol
+    (list 'def name (list 'future (list 'scrape-chnrs chnrs)))))
+#+END_SRC
+
+With the =list= notation we quote what we *don't want* to evaluate. The result of =macroexpand= is similar:
+
+#+BEGIN_SRC clojure
+(def myfuture (future (scrape-chnrs ["1" "2" "3" "4"])))
+#+END_SRC
+
+The only difference is that there are no namespaces added. This is because with the backtick notation Clojure adds namespaces to symbols. If you use ='= the text is inserted as is. To avoid namespace issues you would add namespaces manually in this case.
+
+We can see that a macro is like a code-generator. In the first pass our "template" is processed, and in the second pass the produced code is evaluated. Pretty simple, right?
+
+Let's go over it again using a simple example from the Clojure core:
+
+#+BEGIN_SRC clojure
+(defmacro when
+  "Evaluates test. If logical true, evaluates body in an implicit do."
+  {:added "1.0"}
+  [test & body]
+  (list 'if test (cons 'do body)))
+#+END_SRC
+
+=when= uses =if= as a building block. It just does not use the =else= part of =if=. As we can see, this macro uses the =list= approach. Let's see how =when= expands:
+
+#+BEGIN_SRC clojure :results raw
+(macroexpand '(when "trouble" (str 1 '(2 3 4))))
+#+END_SRC
+
+#+BEGIN_SRC clojure
+(if "trouble" (do (str 1 (quote (2 3 4)))))
+#+END_SRC
+
+Everything that follows the first argument is passed on as a list =body=. =body= is then prefixed with =do= (using =cons=) so that all the forms are contained in one expression which is passed as the second argument to =if=.
+
+Boring. On to something more interesting, the =let= macro:
+
+#+BEGIN_SRC clojure
+(defmacro let
+  "binding => binding-form init-expr
+
+  Evaluates the exprs in a lexical context in which the symbols in
+  the binding-forms are bound to their respective init-exprs or parts
+  therein."
+  {:added "1.0", :special-form true, :forms '[(let [bindings*] exprs*)]}
+  [bindings & body]
+  (assert-args
+     (vector? bindings) "a vector for its binding"
+     (even? (count bindings)) "an even number of forms in binding vector")
+  `(let* ~(destructure bindings) ~@body))
+#+END_SRC
+
+Under the hood this is based on =let*= which is implemented in *Java* in the =LetExpr= class (see the [[https://github.com/clojure/clojure/blob/master/src/jvm/clojure/lang/Compiler.java][Clojure source code on Github]] if you want to more about that). Clojure is built on few primitives like that.

@@ -1,4 +1,5 @@
 #+TITLE: Blogging with Org mode
+#+DATE: 2014-01-05
 #+DESCRIPTION: How I use Emacs Org mode as a blogging tool. It's a bit a pain to set it up, but once it works it's great because writing with Org mode is great...
 #+KEYWORDS: org-mode org emacs blogging
 
@@ -17,6 +18,14 @@ The first thing you need is to define a project that the export function will us
 #+INCLUDE: "../elisp/org-mode-blog-setup.el" src emacs-lisp
 
 After having set the =org-publish-project-alist= variable I define a function =org-mode-blog-preamble= that gets the content for the preamble (the sidebar) from the file [[https://github.com/steckerhalter/org-mode-blog/blob/master/html/preamble.html][preamble.html (source on Github)]]. 
+
+To generate an RSS feed I use =blog-rss=. It depends on the exporter backend =ox-rss.el= from org-contrib. I use [[https://github.com/quelpa/quelpa][quelpa]] to include the contrib stuff (which also contains =htmlize=):
+
+#+BEGIN_SRC emacs-lisp
+(let ((quelpa-upgrade-p (not (require 'htmlize nil t))))
+  (quelpa '(org :url "git://orgmode.org/org-mode.git" :fetcher git
+                :files ("lisp/*.el" "contrib/lisp/*.el" "doc/dir" "doc/*.texi"))))
+#+END_SRC
 
 I use the /preparation-function/ =org-mode-blog-prepare= (which is run before every export) to "touch" =index.org=. The index-file itself is almost never changed but it needs to reflect the changes made in the posts. By updating the modified date of the file I'm ensuring that it will always be published.
 
@@ -72,7 +81,7 @@ A code block in =index.org= which is included from the Elisp source [[https://gi
 
 #+INCLUDE: "../elisp/index.el" src emacs-lisp
 
-After having retrieved the environment I add the file path and the file's Git date to each entry and assemble them in =entries=. Then I sort the entries based on the Git date so that the last modified entry is on top and run =dolist= on the result to format the data for Org output.
+After having retrieved the environment I add the file path and the file's date to each entry and assemble them in =entries=. Then I sort the entries based on the date so that the last modified entry is on top and run =dolist= on the result to format the data for Org output.
 
 On an Org mode export the output of the Elisp code is written directly into the buffer in Org syntax which is then used to create the html.
 
