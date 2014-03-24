@@ -105,18 +105,65 @@ Everything that follows the first argument is passed on as a list =body=. =body=
 Boring. On to something more interesting, the =let= macro:
 
 #+BEGIN_SRC clojure
-(defmacro let
-  "binding => binding-form init-expr
-
-  Evaluates the exprs in a lexical context in which the symbols in
-  the binding-forms are bound to their respective init-exprs or parts
-  therein."
-  {:added "1.0", :special-form true, :forms '[(let [bindings*] exprs*)]}
-  [bindings & body]
-  (assert-args
-     (vector? bindings) "a vector for its binding"
-     (even? (count bindings)) "an even number of forms in binding vector")
-  `(let* ~(destructure bindings) ~@body))
+(defmacro ->
+  "Threads the expr through the forms. Inserts x as the
+  second item in the first form, making a list of it if it is not a
+  list already. If there are more forms, inserts the first form as the
+  second item in second form, etc."
+  {:added "1.0"}
+  ([x] x)
+  ([x form] (if (seq? form)
+              (with-meta `(~(first form) ~x ~@(next form)) (meta form))
+              (list form x)))
+  ([x form & more] `(-> (-> ~x ~form) ~@more)))
 #+END_SRC
 
-Under the hood this is based on =let*= which is implemented in *Java* in the =LetExpr= class (see the [[https://github.com/clojure/clojure/blob/master/src/jvm/clojure/lang/Compiler.java][Clojure source code on Github]] if you want to more about that). Clojure is built on few primitives like that.
+This is the famous threading macro. This macro uses arity overloading (see http://clojure.org/functional_programming). If just one argument is provided it returns that. If two arguments are provided...
+
+#+BEGIN_SRC clojure :results raw
+(macroexpand '(-> 1 (+ 5 3)))
+#+END_SRC
+
+it checks if the form is a sequence, which is true in this case, so it takes the result from =x= and inserts that as the first argument to =+=:
+
+#+BEGIN_SRC clojure
+(+ 1 5 3)
+#+END_SRC
+
+If the =form= is not a seq it appends the value of =x=:
+
+#+BEGIN_SRC clojure :results raw
+(macroexpand '(-> 1 [+ 5 3]))
+#+END_SRC
+
+#+BEGIN_SRC clojure
+([+ 5 3] 1)
+#+END_SRC
+
+Now if we add another expression:
+
+#+BEGIN_SRC clojure :results raw
+(macroexpand-1 '(-> 1 (+ 5 3) (- 9)))
+#+END_SRC
+
+#+BEGIN_SRC clojure
+(clojure.core/-> (clojure.core/-> 1 (+ 5 3)) (- 9))
+#+END_SRC
+
+We used =macroexpand-1= here because =macroexpand= calls =macroexpand-1= repeatedly and we would miss the first expansion. The second expansion gives us:
+
+#+BEGIN_SRC clojure
+(- (clojure.core/-> 1 (+ 5 3)) 9)
+#+END_SRC
+
+To expand the inner threading macro we need to use =macroexpand-all=:
+
+#+BEGIN_SRC clojure :results raw
+(clojure.walk/macroexpand-all '(- (clojure.core/-> 1 (+ 5 3)) 9))
+#+END_SRC
+
+#+BEGIN_SRC clojure
+(- (+ 1 5 3) 9)
+#+END_SRC
+
+So threading result is =0=. You can see that we can do complicated stuff building on simple macro operations.
