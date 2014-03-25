@@ -59,7 +59,7 @@ is transformed into:
 (def myfuture (clojure.core/future (zefix-clj.scrape/scrape-chnrs ["1" "2" "3" "4"])))
 #+END_SRC
 
-In this case I had "quoted" the expression =(def ~jobname (future (scrape-chnrs ~chnrs)))= with a backtick, which means that in the first pass this expressions is not evaluated but for elements prefixed with =~=. In this case these are =jobname= which was passed in as =myfuture= and the numbers.
+In this case I had "quoted" the expression =(def ~jobname (future (scrape-chnrs ~chnrs)))= with a backtick, which means that in the first pass this expression is not evaluated but for elements prefixed with =~=. Here these are =jobname= which was passed in as =myfuture= and the numbers.
 
 Now the same macro can also be written without backtick notation:
 
@@ -74,7 +74,7 @@ With the =list= notation we quote what we *don't want* to evaluate. The result o
 (def myfuture (future (scrape-chnrs ["1" "2" "3" "4"])))
 #+END_SRC
 
-The only difference is that there are no namespaces added. This is because with the backtick notation Clojure adds namespaces to symbols. If you use ='= the text is inserted as is. To avoid namespace issues you would add namespaces manually in this case.
+The only difference is that there are no namespaces added. This is because with the backtick notation Clojure adds namespaces to symbols. If you use a single quote ' the text is inserted as is. To avoid namespace issues you would add namespaces manually in this case.
 
 We can see that a macro is like a code-generator. In the first pass our "template" is processed, and in the second pass the produced code is evaluated. Pretty simple, right?
 
@@ -122,13 +122,13 @@ This is the famous threading macro. This macro uses arity overloading (see http:
 (macroexpand '(-> 1 (+ 5 3)))
 #+END_SRC
 
-it checks if the form is a sequence, which is true in this case, so it takes the result from =x= and inserts that as the first argument to =+=:
+it checks if the form is a sequence (see http://clojure.org/sequences for more information), which is true in this case, so it takes the result from =x= and inserts that as the first argument to =+=:
 
 #+BEGIN_SRC clojure
 (+ 1 5 3)
 #+END_SRC
 
-If the =form= is not a seq it makes a list of =form=  and =x=:
+If the =form= is not a sequence it makes a list of =form= and =x=:
 
 #+BEGIN_SRC clojure :results raw
 (macroexpand '(-> 1 inc))
@@ -138,11 +138,13 @@ If the =form= is not a seq it makes a list of =form=  and =x=:
 (inc 1)
 #+END_SRC
 
-Now if we add another expression:
+Now if we have two expressions after the =1=:
 
 #+BEGIN_SRC clojure :results raw
 (macroexpand-1 '(-> 1 (+ 5 3) (- 9)))
 #+END_SRC
+
+we get
 
 #+BEGIN_SRC clojure
 (clojure.core/-> (clojure.core/-> 1 (+ 5 3)) (- 9))
@@ -164,4 +166,6 @@ To expand everything we need to use =macroexpand-all= from =clojure.walk=:
 (- (+ 1 5 3) 9)
 #+END_SRC
 
-So the result is =0=. You can see that complicated stuff in Lisp is building on simple macro operations.
+The result is =0=. You can see that complicated stuff in Lisp is building on simple macro operations.
+
+This tour helped me a bit to better grasp the concept of Lisp macros. I hope it helped you too :)
