@@ -102,7 +102,7 @@ Let's go over it again using a simple example from the Clojure core:
 
 Everything that follows the first argument is passed on as a list =body=. =body= is then prefixed with =do= (using =cons=) so that all the forms are contained in one expression which is passed as the second argument to =if=.
 
-Boring. On to something more interesting, the =let= macro:
+Boring. On to something more interesting, the =->= macro:
 
 #+BEGIN_SRC clojure
 (defmacro ->
@@ -130,14 +130,14 @@ it checks if the form is a sequence, which is true in this case, so it takes the
 (+ 1 5 3)
 #+END_SRC
 
-If the =form= is not a seq it appends the value of =x=:
+If the =form= is not a seq it makes a list of =form=  and =x=:
 
 #+BEGIN_SRC clojure :results raw
-(macroexpand '(-> 1 [+ 5 3]))
+(macroexpand '(-> 1 inc))
 #+END_SRC
 
 #+BEGIN_SRC clojure
-([+ 5 3] 1)
+(inc 1)
 #+END_SRC
 
 Now if we add another expression:
@@ -156,14 +156,14 @@ We used =macroexpand-1= here because =macroexpand= calls =macroexpand-1= repeate
 (- (clojure.core/-> 1 (+ 5 3)) 9)
 #+END_SRC
 
-To expand the inner threading macro we need to use =macroexpand-all=:
+To expand everything we need to use =macroexpand-all= from =clojure.walk=:
 
 #+BEGIN_SRC clojure :results raw
-(clojure.walk/macroexpand-all '(- (clojure.core/-> 1 (+ 5 3)) 9))
+(clojure.walk/macroexpand-all '(-> 1 (+ 5 3) (- 9)))
 #+END_SRC
 
 #+BEGIN_SRC clojure
 (- (+ 1 5 3) 9)
 #+END_SRC
 
-So threading result is =0=. You can see that we can do complicated stuff building on simple macro operations.
+So the result is =0=. You can see that complicated stuff in Lisp is building on simple macro operations.
