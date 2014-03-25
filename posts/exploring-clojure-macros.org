@@ -1,4 +1,5 @@
 #+TITLE: Exploring Clojure Macros
+#+DATE: 2014-03-25
 #+DESCRIPTION: Exploring Clojure Macros based on some of my code and macros from the Clojure core...
 #+KEYWORDS: clojure macros beginner tutorial lisp future
 
