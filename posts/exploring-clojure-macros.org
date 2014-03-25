@@ -1,5 +1,5 @@
-#+TITLE: Clojure Macros explained with real-world examples
-#+DESCRIPTION: Tutorial explaining Clojure Macros based on real code used in the real world :)
+#+TITLE: Exploring Clojure Macros
+#+DESCRIPTION: Exploring Clojure Macros based on some of my code and macros from the Clojure core...
 #+KEYWORDS: clojure macros beginner tutorial lisp future
 
 I was shying back from Lisp macros for a long time. It seemed complicated and all the explanations I found were just like that. Why would I even want to use a macro?
@@ -37,21 +37,20 @@ So yeah, the thing was in the background now but I couldn't check the status or 
 But I thought, "Hey! I would like to dynamically specify the name!". I wanted to be able to use:
 
 #+BEGIN_SRC clojure
-(scrape-job "myfuture" ["1" "2" "3" "4"])
+(scrape-job myfuture ["1" "2" "3" "4"])
 #+END_SRC
 
 which would run and define a future =myfuture=. The macro I wrote is this:
 
 #+BEGIN_SRC clojure
 (defmacro scrape-job [jobname chnrs]
-  (let [name (symbol jobname)] ; convert string (jobname) into symbol
-    `(def name (future (scrape-chnrs chnrs)))))
+  `(def ~jobname (future (scrape-chnrs ~chnrs))))
 #+END_SRC
 
 What happens now when this macro is run? It as kind of a two-pass thing. In the first pass the macro is expanded, meaning that (we simulate this first pass with =macroexpand=)
 
 #+BEGIN_SRC clojure :results raw
-(macroexpand '(scrape-job "myfuture" ["1" "2" "3" "4"]))
+(macroexpand '(scrape-job myfuture ["1" "2" "3" "4"]))
 #+END_SRC
 
 is transformed into:
@@ -60,14 +59,13 @@ is transformed into:
 (def myfuture (clojure.core/future (zefix-clj.scrape/scrape-chnrs ["1" "2" "3" "4"])))
 #+END_SRC
 
-In this case I had "quoted" the expression =(def ~name (future (scrape-chnrs ~chnrs)))= with a backtick, which means that in the first pass this expressions is not evaluated but for elements prefixed with =~=. In this case these are =name= which was passed in as =myfuture= and the numbers.
+In this case I had "quoted" the expression =(def ~jobname (future (scrape-chnrs ~chnrs)))= with a backtick, which means that in the first pass this expressions is not evaluated but for elements prefixed with =~=. In this case these are =jobname= which was passed in as =myfuture= and the numbers.
 
 Now the same macro can also be written without backtick notation:
 
 #+BEGIN_SRC clojure
 (defmacro scrape-job [jobname chnrs]
-  (let [name (symbol jobname)] ; convert string (jobname) into symbol
-    (list 'def name (list 'future (list 'scrape-chnrs chnrs)))))
+  (list 'def jobname (list 'future (list 'scrape-chnrs chnrs))))
 #+END_SRC
 
 With the =list= notation we quote what we *don't want* to evaluate. The result of =macroexpand= is similar:
