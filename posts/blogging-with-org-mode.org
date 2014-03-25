@@ -42,12 +42,9 @@ blog
 │   ├── darkstrap.css
 │   └── style.css
 ├── index.org
-├── posts
-│   └── blogging-with-org-mode.org
-└── sitemap.org
+└── posts
+    └── blogging-with-org-mode.org
 #+END_SRC
-
-The sitemap is auto-generated because above we used =:auto-sitemap t=.
 
 * Creating a posts index on the homepage
 
