@@ -1,5 +1,5 @@
 #+TITLE: Creative Collaboration
-#+DATE: 30-03-14
+#+DATE: 2014-03-30
 #+DESCRIPTION: Working together means different things to different people, but commonly it's treated as it can only mean one thing. In this post I will try to look at these different meanings...
 #+KEYWORDS: work team teamwork together alone job collaboration creativity
 
