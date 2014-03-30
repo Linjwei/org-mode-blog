@@ -1,0 +1,26 @@
+#+TITLE: Creative Collaboration
+#+DATE: 30-03-14
+#+DESCRIPTION: Working together means different things to different people, but commonly it's treated as it can only mean one thing. In this post I will try to look at these different meanings...
+#+KEYWORDS: work team teamwork together alone job collaboration creativity
+
+From my experience what =working together= usually means in a job is to work alone in a team.
+
+In a web project for example everyone gets his tasks to work on. The roles are set. One guy is the project owner and the set of tasks he will be working on is clear. Nobody will work together with him on these tasks (like writing user stories or something like that).
+
+The developer gets a few tickets assigned (or picks them) and works on these, alone. The designer works on the design. The ScrumMaster (if there is one) works on improving the "collaboration" in the team.
+
+The together-part is just a few minutes here and there where the team members meet and agree on who is going to do what, or discuss the strategy, or raise impediments and decide who's going to resolve them.
+
+But there is also another way to work together. That is when the task at hand is approached together. Two people start writing a document. The first person writes a sentence, the other person suggests improvements and possibly the next sentence. Then the first person continues etc.
+
+But that's quite a foreign way to write a document from what I have seen. It always seems to be kind of clear that someone writes it alone first and then gives the document to other people so that they can proof-read and suggest improvements. Then it goes back the author and he tries to incorporate what the other people suggested. Then it goes again to the proof-readers etc. What a boring and slow way to do something "together"...
+
+I'm quite sure that to collaborate on writing documents like I have described before would help everyone in the end. It would be more fun. It would be faster. The documents would turn out much more balanced and would be easier to understand by other people because two people already made sure that they can understand them. Not so much time would be wasted trying to get into the mind of another person without his help.
+
+In programming this method is called pair-programming. And when people do pair programming it's usually not what was meant at all by pair-programming. What they resort to is often just that one person is the one in charge and knows the code he's working on really well and the other person sort of just watches him over the shoulder, trying to keep up what the other one is doing, maybe saying something here and there. It's not a creative process for both of them.
+
+I'd really like to participate in *creative collaboration* (that's what I will call this way of truly working together from now on). I want to make it happen. I believe that other people just don't know how much fun it could be. So I need to show them.
+
+In the coming days I will try to get people to do this. I don't know if it is going to work, but I will try... and report on the outcome in updating this post. So stay tuned!
+
+... and no, I haven't written this text in creative collaboration (yet :) ...
